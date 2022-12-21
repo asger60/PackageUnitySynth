@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0060a0610eaf747e3971f417334fcfb7, type: 3}
   m_Name: Filter
   m_EditorClassIdentifier: 
-  filterType: 0
+  filterType: 2
   lowPassSettings:
     oversampling: 2
     cutoffFrequency: 10168
@@ -224,28 +224,6 @@ MonoBehaviour:
     bandWidth: 42.5
   formantSettings:
     vowel: 3
---- !u!114 &1845706145128929777
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0060a0610eaf747e3971f417334fcfb7, type: 3}
-  m_Name: Filter
-  m_EditorClassIdentifier: 
-  filterType: 0
-  lowPassSettings:
-    oversampling: 0
-    cutoffFrequency: 0
-    resonance: 0
-  bandPassSettings:
-    frequency: 0
-    bandWidth: 0
-  formantSettings:
-    vowel: 0
 --- !u!114 &2160726863272576965
 MonoBehaviour:
   m_ObjectHideFlags: 0
