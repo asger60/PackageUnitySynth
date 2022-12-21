@@ -1679,7 +1679,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a8634fa5289b477baf8a3ddce1d702a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  preset: {fileID: 11400000, guid: f032185ae0ec04e7d8ea3bcc39eab8be, type: 2}
+  preset: {fileID: 11400000, guid: 6831ae45285d94cb4a74359b69caa771, type: 2}
   playNoteInterval: 3
   faceExpression: {fileID: 2936520724489370948}
 --- !u!1 &2936520724489370953

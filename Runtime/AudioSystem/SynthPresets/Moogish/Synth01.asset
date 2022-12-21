@@ -894,6 +894,24 @@ MonoBehaviour:
     bandWidth: 10
   formantSettings:
     vowel: 1
+--- !u!114 &-4215164526972664780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c5d75eb90954545a59552f9b363791, type: 3}
+  m_Name: Oscillator
+  m_EditorClassIdentifier: 
+  tuning: 0
+  amplitude: 0
+  simpleOscillatorType: 0
+  noiseType: 0
+  waveTableOscillatorType: 0
+  oscillatorType: 0
 --- !u!114 &-4039759554304759253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1446,6 +1464,28 @@ MonoBehaviour:
     bandWidth: 10
   formantSettings:
     vowel: 1
+--- !u!114 &-1203028862154270429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0060a0610eaf747e3971f417334fcfb7, type: 3}
+  m_Name: Filter
+  m_EditorClassIdentifier: 
+  filterType: 0
+  lowPassSettings:
+    oversampling: 1
+    cutoffFrequency: 24000
+    resonance: 0.25
+  bandPassSettings:
+    frequency: 1000
+    bandWidth: 10
+  formantSettings:
+    vowel: 1
 --- !u!114 &-1129622826348748020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1668,7 +1708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 277ca1c0322b94daebb858c10a325f1d, type: 3}
   m_Name: Synth01
   m_EditorClassIdentifier: 
-  isInit: 0
+  isInit: 1
   oscillatorSettings:
   - {fileID: -6720349405473190513}
   - {fileID: -8192977227954585940}
@@ -1748,6 +1788,7 @@ MonoBehaviour:
   - {fileID: 3705318254683862302}
   - {fileID: 1627609201309385468}
   - {fileID: 5844517995262529853}
+  - {fileID: -4215164526972664780}
   filterSettings:
   - {fileID: 1842716009555525334}
   - {fileID: -4531754215726637961}
@@ -1826,6 +1867,7 @@ MonoBehaviour:
   - {fileID: -3574183238239227684}
   - {fileID: 6381225341469984106}
   - {fileID: 2643808192397023784}
+  - {fileID: -1203028862154270429}
   pitchModifiers:
   - {fileID: -1226005495159170830}
   amplitudeModifiers:
