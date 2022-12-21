@@ -17,10 +17,11 @@ namespace UnitySynth.Runtime.Synth
         private float _vF, _vD, _vZ1, _vZ2, _vZ3;
         private float _filterFrequency;
         private float _q; // 1-10
+        private float _frequencyMod = 1;
 
         public void SetFrequency(float freq)
         {
-            _filterFrequency = freq;
+            _filterFrequency = freq * _frequencyMod;
         }
 
         public void SetQ(float q)
@@ -35,13 +36,16 @@ namespace UnitySynth.Runtime.Synth
 
         public override void SetParameters(SynthSettingsObjectFilter settingsObjectFilter)
         {
-            _filterFrequency = settingsObjectFilter.bandPassSettings.frequency;
+            SetFrequency(settingsObjectFilter.bandPassSettings.frequency);
             _q = settingsObjectFilter.bandPassSettings.bandWidth;
         }
 
         public override void HandleModifiers(float mod1)
         {
+            _frequencyMod = mod1;
         }
+
+     
 
 
         public override void process_mono_stride(float[] samples, int sample_count, int offset, int stride)

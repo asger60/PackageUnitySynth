@@ -135,7 +135,7 @@ namespace UnitySynth.Runtime.Synth
             _filterBandPass3.SetQ(_currentVowel.GetBand(2).q);
         }
 
-        public void SetVowel(int index)
+        private void SetVowel(int index)
         {
             _currentVowel = _vowels[index];
             _filterBandPass1.SetFrequency(_currentVowel.GetBand(0).frequency);
@@ -161,7 +161,6 @@ namespace UnitySynth.Runtime.Synth
 
         public override void HandleModifiers(float mod1)
         {
-            throw new System.NotImplementedException();
         }
 
         public override void process_mono_stride(float[] samples, int sample_count, int offset, int stride)

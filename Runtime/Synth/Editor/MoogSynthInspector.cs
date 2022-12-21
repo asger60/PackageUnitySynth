@@ -39,8 +39,8 @@ namespace UnitySynth.Runtime.Synth.Editor
         const int bufSize = 1024;
         private float[] testBuf = null;
         float[] bufCopy = null;
-        string[] sourceNames = null;
-        string[] targetNames = null;
+        //string[] sourceNames = null;
+        //string[] targetNames = null;
         //float[] testMatrix = new float[8 * 8];
 
         /// Static Cache

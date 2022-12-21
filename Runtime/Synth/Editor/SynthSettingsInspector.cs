@@ -1,12 +1,11 @@
-using LooperAPP.AudioSystem;
 using LooperAPP.AudioSystem.Editor;
-using Rytmos.AudioSystem;
+using Synth;
+using Synth.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnitySynth.Runtime.AudioSystem;
-using UnitySynth.Runtime.Synth;
 
-namespace Synth.Editor
+namespace UnitySynth.Runtime.Synth.Editor
 {
     [CustomEditor(typeof(UnitySynthPreset))]
     public class SynthSettingsInspector : UnityEditor.Editor
@@ -16,6 +15,7 @@ namespace Synth.Editor
         private bool _showAmpMods;
         private bool _showPitchMods;
         private bool _showOscillators;
+        private bool _showFilters;
 
         public override void OnInspectorGUI()
         {
@@ -38,7 +38,23 @@ namespace Synth.Editor
                     CreateOscillator("oscillatorSettings", "Oscillator");
                 }
 
-                
+                GUILayout.EndHorizontal();
+            }
+            
+            GUILayout.Space(10);
+            _showFilters = EditorGUILayout.Foldout(_showFilters, "Filters");
+            if (_showFilters)
+            {
+                foreach (var osc in _settingsObject.filterSettings)
+                {
+                    SynthFilterInspector.Draw(this, osc);
+                }
+
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("add filter"))
+                {
+                    CreateFilter("filterSettings", "Filter");
+                }
 
                 GUILayout.EndHorizontal();
             }
@@ -169,11 +185,25 @@ namespace Synth.Editor
             {
                 SerializedProperty filterList = serializedObject.FindProperty(propertyName);
                 var newOSC = _settingsObject.AddElement<SynthSettingsObjectOscillator>(filterList, settingsName);
-                
                 serializedObject.ApplyModifiedProperties();
                 EditorUtility.SetDirty(_settingsObject);
                 _settingsObject.ReBuildSynth();
             }
+            
+            void CreateFilter(string propertyName, string settingsName)
+            {
+                SerializedProperty filterList = serializedObject.FindProperty(propertyName);
+                var newFilter = _settingsObject.AddElement<SynthSettingsObjectFilter>(filterList, settingsName);
+                newFilter.Init();
+                serializedObject.ApplyModifiedProperties();
+                EditorUtility.SetDirty(_settingsObject);
+                _settingsObject.ReBuildSynth();
+            }
+        }
+
+        public void RebuildSynth()
+        {
+            _settingsObject.ReBuildSynth();
         }
 
         public void DeleteElement(SynthSettingsObjectBase synthSettings)

@@ -2,6 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using UnitySynth.Runtime.Synth;
+using UnitySynth.Runtime.Synth.Editor;
 
 namespace Synth.Editor
 {

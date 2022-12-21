@@ -19,6 +19,7 @@ namespace UnitySynth.Runtime.Synth
         [Serializable]
         public struct LowPassSettings
         {
+            [Range(1, 4)] public int oversampling;
             [Range(10, 24000)] public float cutoffFrequency;
             [Range(0, 1)] public float resonance;
         }
@@ -37,9 +38,21 @@ namespace UnitySynth.Runtime.Synth
         [Serializable]
         public struct FormantSettings
         {
-            [Range(0, 1)] public int vowel;
+            [Range(1, 6)] public int vowel;
         }
 
         public FormantSettings formantSettings;
+
+        public void Init()
+        {
+            lowPassSettings.oversampling = 1;
+            lowPassSettings.cutoffFrequency = 24000;
+            lowPassSettings.resonance = 0.25f;
+
+            bandPassSettings.bandWidth = 10;
+            bandPassSettings.frequency = 1000;
+
+            formantSettings.vowel = 1;
+        }
     }
 }

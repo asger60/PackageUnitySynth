@@ -142,6 +142,7 @@ namespace UnitySynth.Runtime.Synth
         {
             reso = settingsObjectFilter.lowPassSettings.resonance;
             SetCutoff(settingsObjectFilter.lowPassSettings.cutoffFrequency);
+            SetOversampling(settingsObjectFilter.lowPassSettings.oversampling);
         }
 
         private float _cutoffMod = 1;

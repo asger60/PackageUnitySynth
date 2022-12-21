@@ -1,7 +1,9 @@
+using Synth;
+using Synth.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace Synth.Editor
+namespace UnitySynth.Runtime.Synth.Editor
 {
     public class SynthLFOInspector : UnityEditor.Editor
     {

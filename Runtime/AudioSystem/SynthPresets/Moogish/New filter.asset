@@ -12,4 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0060a0610eaf747e3971f417334fcfb7, type: 3}
   m_Name: New filter
   m_EditorClassIdentifier: 
-  filterType: 0
+  filterType: 2
+  lowPassSettings:
+    oversampling: 0
+    cutoffFrequency: 14664
+    resonance: 0.138
+  bandPassSettings:
+    frequency: 5564
+    bandWidth: 10
+  formantSettings:
+    vowel: 3

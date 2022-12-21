@@ -63,7 +63,7 @@ namespace UnitySynth.Runtime.Synth
         bool is_initialized = false;
 
         // Current MIDI evt
-        bool note_is_on;
+        //bool note_is_on;
         private List<int> _notes = new List<int>();
         int current_velocity;
 
@@ -334,7 +334,7 @@ namespace UnitySynth.Runtime.Synth
             //fenv = new ADSR();
             // aenv = new ADSR();
 
-            note_is_on = false;
+            //note_is_on = false;
 
             if (freqtab == null)
             {
@@ -636,7 +636,6 @@ namespace UnitySynth.Runtime.Synth
                     }
 
                     audioFilterBase.HandleModifiers(currentMod);
-
                 }
                 
                 //_filter1.SetCutoff(cutOffFreq); // 0 Hz cutoff is bad
@@ -664,10 +663,9 @@ namespace UnitySynth.Runtime.Synth
 
 
         /// Internals
-        public static float midi2freq(int note)
+        private static float midi2freq(int note)
         {
             return 440 * (Mathf.Pow(2, ((note - 69) / 12f)));
-
             // return 32.70319566257483f * Mathf.Pow(2.0f, note / 12.0f + octave);
         }
     };
