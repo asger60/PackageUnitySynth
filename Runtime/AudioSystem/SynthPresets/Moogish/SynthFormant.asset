@@ -147,6 +147,28 @@ MonoBehaviour:
   decay: 1
   sustain: 0.5
   release: 1
+--- !u!114 &-2578103601809149074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0060a0610eaf747e3971f417334fcfb7, type: 3}
+  m_Name: Filter
+  m_EditorClassIdentifier: 
+  filterType: 0
+  lowPassSettings:
+    oversampling: 1
+    cutoffFrequency: 24000
+    resonance: 0.25
+  bandPassSettings:
+    frequency: 1000
+    bandWidth: 10
+  formantSettings:
+    vowel: 1
 --- !u!114 &-1226005495159170830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,17 +196,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 277ca1c0322b94daebb858c10a325f1d, type: 3}
   m_Name: SynthFormant
   m_EditorClassIdentifier: 
-  volume: 0.824
-  stopOnRelease: 1
-  stopDuration: 0.1
-  noteOffset: 0
-  cutoffFrequency: 5805
-  resonance: 0.508
-  oversampling: 2
-  filterType: 2
+  isInit: 1
   oscillatorSettings:
   - {fileID: -6720349405473190513}
   - {fileID: -8192977227954585940}
+  - {fileID: 8203757297496580010}
+  filterSettings:
+  - {fileID: -2578103601809149074}
   pitchModifiers:
   - {fileID: -1226005495159170830}
   amplitudeModifiers:
@@ -303,6 +321,24 @@ MonoBehaviour:
   decay: 1
   sustain: 0.5
   release: 1
+--- !u!114 &8203757297496580010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c5d75eb90954545a59552f9b363791, type: 3}
+  m_Name: Oscillator
+  m_EditorClassIdentifier: 
+  tuning: 0
+  amplitude: 0
+  simpleOscillatorType: 0
+  noiseType: 0
+  waveTableOscillatorType: 0
+  oscillatorType: 0
 --- !u!114 &8305974315921078220
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 ﻿using Synth;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnitySynth.Runtime.Synth;
 
 namespace UnitySynth.Runtime.AudioSystem
@@ -7,15 +8,15 @@ namespace UnitySynth.Runtime.AudioSystem
     [CreateAssetMenu(fileName = "New synth preset", menuName = "UnitySynth/SynthPreset")]
     public class UnitySynthPreset : ScriptableObject
     {
+        [FormerlySerializedAs("justCreated")] public bool isInit;
         
 
 
-        public SynthSettingsObjectOscillator[] oscillatorSettings;
+        [HideInInspector] public SynthSettingsObjectOscillator[] oscillatorSettings;
 
 
-        public SynthSettingsObjectFilter[] filterSettings;
-        
-        
+        [HideInInspector] public SynthSettingsObjectFilter[] filterSettings;
+
         [HideInInspector] public SynthSettingsObjectBase[] pitchModifiers;
 
         [HideInInspector] public SynthSettingsObjectBase[] amplitudeModifiers;

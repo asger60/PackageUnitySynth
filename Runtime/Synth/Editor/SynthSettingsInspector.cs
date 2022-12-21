@@ -19,10 +19,16 @@ namespace UnitySynth.Runtime.Synth.Editor
 
         public override void OnInspectorGUI()
         {
+            
             DrawDefaultInspector();
             if (_settingsObject == null) _settingsObject = (UnitySynthPreset) this.target;
             if (_settingsObject == null) return;
-
+            if (!_settingsObject.isInit)
+            {
+                InitPreset();
+                return;
+            }
+            
             GUILayout.Space(10);
             _showOscillators = EditorGUILayout.Foldout(_showOscillators, "Oscillators");
             if (_showOscillators)
@@ -156,54 +162,62 @@ namespace UnitySynth.Runtime.Synth.Editor
                 EditorGUI.indentLevel = 0;
             }
 
-            void CreateEnvelopeMod(string propertyName, string settingsName)
-            {
-                SerializedProperty filterList = serializedObject.FindProperty(propertyName);
-                var newEnvelope = _settingsObject.AddElement<SynthSettingsObjectEnvelope>(filterList, settingsName);
-                newEnvelope.attack = 1;
-                newEnvelope.decay = 1;
-                newEnvelope.sustain = 0.5f;
-                newEnvelope.release = 1;
-                serializedObject.ApplyModifiedProperties();
-                EditorUtility.SetDirty(_settingsObject);
-                _settingsObject.ReBuildSynth();
-            }
-            
-            void CreateLFOMod(string propertyName, string settingsName)
-            {
-                SerializedProperty filterList = serializedObject.FindProperty(propertyName);
-                var newEnvelope = _settingsObject.AddElement<SynthSettingsObjectLFO>(filterList, settingsName);
-                newEnvelope.amp = 1;
-                newEnvelope.frequency = 10;
-                newEnvelope.fadeInDuration = 0.01f;
-                serializedObject.ApplyModifiedProperties();
-                EditorUtility.SetDirty(_settingsObject);
-                _settingsObject.ReBuildSynth();
-            }
-
-            void CreateOscillator(string propertyName, string settingsName)
-            {
-                SerializedProperty filterList = serializedObject.FindProperty(propertyName);
-                var newOSC = _settingsObject.AddElement<SynthSettingsObjectOscillator>(filterList, settingsName);
-                serializedObject.ApplyModifiedProperties();
-                EditorUtility.SetDirty(_settingsObject);
-                _settingsObject.ReBuildSynth();
-            }
-            
-            void CreateFilter(string propertyName, string settingsName)
-            {
-                SerializedProperty filterList = serializedObject.FindProperty(propertyName);
-                var newFilter = _settingsObject.AddElement<SynthSettingsObjectFilter>(filterList, settingsName);
-                newFilter.Init();
-                serializedObject.ApplyModifiedProperties();
-                EditorUtility.SetDirty(_settingsObject);
-                _settingsObject.ReBuildSynth();
-            }
         }
 
+        void CreateEnvelopeMod(string propertyName, string settingsName)
+        {
+            SerializedProperty filterList = serializedObject.FindProperty(propertyName);
+            var newEnvelope = _settingsObject.AddElement<SynthSettingsObjectEnvelope>(filterList, settingsName);
+            newEnvelope.attack = 1;
+            newEnvelope.decay = 1;
+            newEnvelope.sustain = 0.5f;
+            newEnvelope.release = 1;
+            serializedObject.ApplyModifiedProperties();
+            EditorUtility.SetDirty(_settingsObject);
+            _settingsObject.ReBuildSynth();
+        }
+
+        void CreateLFOMod(string propertyName, string settingsName)
+        {
+            SerializedProperty filterList = serializedObject.FindProperty(propertyName);
+            var newEnvelope = _settingsObject.AddElement<SynthSettingsObjectLFO>(filterList, settingsName);
+            newEnvelope.amp = 1;
+            newEnvelope.frequency = 10;
+            newEnvelope.fadeInDuration = 0.01f;
+            serializedObject.ApplyModifiedProperties();
+            EditorUtility.SetDirty(_settingsObject);
+            _settingsObject.ReBuildSynth();
+        }
+
+        void CreateOscillator(string propertyName, string settingsName)
+        {
+            SerializedProperty filterList = serializedObject.FindProperty(propertyName);
+            var newOSC = _settingsObject.AddElement<SynthSettingsObjectOscillator>(filterList, settingsName);
+            serializedObject.ApplyModifiedProperties();
+            EditorUtility.SetDirty(_settingsObject);
+            _settingsObject.ReBuildSynth();
+        }
+
+        void CreateFilter(string propertyName, string settingsName)
+        {
+            SerializedProperty filterList = serializedObject.FindProperty(propertyName);
+            var newFilter = _settingsObject.AddElement<SynthSettingsObjectFilter>(filterList, settingsName);
+            newFilter.Init();
+            serializedObject.ApplyModifiedProperties();
+            EditorUtility.SetDirty(_settingsObject);
+            _settingsObject.ReBuildSynth();
+        }
         public void RebuildSynth()
         {
             _settingsObject.ReBuildSynth();
+        }
+
+        private void InitPreset()
+        {
+            CreateOscillator("oscillatorSettings", "Oscillator");
+            CreateFilter("filterSettings", "Filter");
+            _settingsObject.isInit = true;
+            
         }
 
         public void DeleteElement(SynthSettingsObjectBase synthSettings)
