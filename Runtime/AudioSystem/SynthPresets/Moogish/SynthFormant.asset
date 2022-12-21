@@ -1,0 +1,337 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8449452025889934284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Envelope
+  m_EditorClassIdentifier: 
+  attack: 0.1
+  decay: 1
+  sustain: 1
+  release: 0
+--- !u!114 &-8192977227954585940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c5d75eb90954545a59552f9b363791, type: 3}
+  m_Name: Oscillator
+  m_EditorClassIdentifier: 
+  tuning: -17
+  amplitude: 0.145
+  simpleOscillatorType: 2
+  noiseType: 0
+  waveTableOscillatorType: 0
+  oscillatorType: 2
+--- !u!114 &-7923988489198636892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Envelope
+  m_EditorClassIdentifier: 
+  attack: 0
+  decay: 0
+  sustain: 0
+  release: 0
+--- !u!114 &-7716501802336983844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Envelope
+  m_EditorClassIdentifier: 
+  attack: 0
+  decay: 0
+  sustain: 0
+  release: 0
+--- !u!114 &-6720349405473190513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c5d75eb90954545a59552f9b363791, type: 3}
+  m_Name: Oscillator
+  m_EditorClassIdentifier: 
+  tuning: -24
+  amplitude: 1
+  simpleOscillatorType: 1
+  noiseType: 0
+  waveTableOscillatorType: 1
+  oscillatorType: 0
+--- !u!114 &-6436502495867978654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Envelope
+  m_EditorClassIdentifier: 
+  attack: 0
+  decay: 0
+  sustain: 0
+  release: 0
+--- !u!114 &-4656710288397067201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Amplitude Envelope
+  m_EditorClassIdentifier: 
+  attack: 0.07
+  decay: 0.29
+  sustain: 0.67
+  release: 0.64
+--- !u!114 &-3952989828411473107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2696701b9eb054b50aac1114417c9ed0, type: 3}
+  m_Name: Amplitude LFO
+  m_EditorClassIdentifier: 
+  amp: 16.67
+  frequency: 10
+  fadeInDuration: 0.01
+--- !u!114 &-2933164718605811498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Envelope
+  m_EditorClassIdentifier: 
+  attack: 1
+  decay: 1
+  sustain: 0.5
+  release: 1
+--- !u!114 &-1226005495159170830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2696701b9eb054b50aac1114417c9ed0, type: 3}
+  m_Name: Pitch LFO
+  m_EditorClassIdentifier: 
+  amp: 0.34
+  frequency: 5.03
+  fadeInDuration: 1.43
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 277ca1c0322b94daebb858c10a325f1d, type: 3}
+  m_Name: SynthFormant
+  m_EditorClassIdentifier: 
+  volume: 0.824
+  stopOnRelease: 1
+  stopDuration: 0.1
+  noteOffset: 0
+  cutoffFrequency: 5805
+  resonance: 0.508
+  oversampling: 2
+  filterType: 2
+  oscillatorSettings:
+  - {fileID: -6720349405473190513}
+  - {fileID: -8192977227954585940}
+  pitchModifiers:
+  - {fileID: -1226005495159170830}
+  amplitudeModifiers:
+  - {fileID: -4656710288397067201}
+  - {fileID: 1723929531289578920}
+  filterModifiers:
+  - {fileID: 2160726863272576965}
+  - {fileID: -8449452025889934284}
+--- !u!114 &1723929531289578920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2696701b9eb054b50aac1114417c9ed0, type: 3}
+  m_Name: Amplitude LFO
+  m_EditorClassIdentifier: 
+  amp: 0.05
+  frequency: 3.26
+  fadeInDuration: 0.01
+--- !u!114 &2160726863272576965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2696701b9eb054b50aac1114417c9ed0, type: 3}
+  m_Name: Amp LFO
+  m_EditorClassIdentifier: 
+  amp: 0
+  frequency: 5.11
+  fadeInDuration: 1.23
+--- !u!114 &3744761466424588587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: envelope
+  m_EditorClassIdentifier: 
+  attack: 0
+  decay: 0
+  sustain: 0
+  release: 0
+--- !u!114 &5591239648410933753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Envelope
+  m_EditorClassIdentifier: 
+  attack: 0
+  decay: 0
+  sustain: 0
+  release: 0
+--- !u!114 &6460126864773483112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Envelope
+  m_EditorClassIdentifier: 
+  attack: 0
+  decay: 0
+  sustain: 0
+  release: 0
+--- !u!114 &7454900387961240619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Envelope
+  m_EditorClassIdentifier: 
+  attack: 0
+  decay: 0
+  sustain: 0
+  release: 0
+--- !u!114 &8054436421614163277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Envelope
+  m_EditorClassIdentifier: 
+  attack: 1
+  decay: 1
+  sustain: 0.5
+  release: 1
+--- !u!114 &8305974315921078220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Envelope
+  m_EditorClassIdentifier: 
+  attack: 0
+  decay: 0
+  sustain: 0.001
+  release: 0
+--- !u!114 &8956721628044731632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Envelope
+  m_EditorClassIdentifier: 
+  attack: 0
+  decay: 0
+  sustain: 0
+  release: 0
