@@ -174,10 +174,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 277ca1c0322b94daebb858c10a325f1d, type: 3}
   m_Name: Synth01
   m_EditorClassIdentifier: 
-  volume: 0.824
-  stopOnRelease: 1
-  stopDuration: 0.1
-  noteOffset: 0
   cutoffFrequency: 5805
   resonance: 0.508
   oversampling: 2

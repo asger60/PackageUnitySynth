@@ -1,6 +1,7 @@
 using Rytmos.AudioSystem;
 using Synth;
 using UnitySynth.Runtime.AudioSystem;
+using UnitySynth.Runtime.Synth;
 
 namespace LooperAPP.AudioSystem
 {
@@ -8,8 +9,8 @@ namespace LooperAPP.AudioSystem
     {
         private MoogSynth _synth;
         private int _currentNote;
-        private InstrumentObjectSynth _settings;
-        public InstrumentObjectSynth Settings => _settings;
+        private UnitySynthPreset _settings;
+        public UnitySynthPreset Settings => _settings;
 
         public override void Init()
         {
@@ -33,7 +34,7 @@ namespace LooperAPP.AudioSystem
             IsReady = true;
         }
 
-        public void SetPreset(InstrumentObjectSynth preset)
+        public void SetPreset(UnitySynthPreset preset)
         {
             _synth.SetPreset(preset);
             _settings = preset;

@@ -88,85 +88,99 @@
 //  He also suggests a half sample delay as phase compensation, which
 //  is not implemented yet.
 
+using UnitySynth.Runtime.Synth.Filter;
 using static System.Math;
 
-public class MoogFilter
+namespace UnitySynth.Runtime.Synth
 {
-    /// Static config
-    const float C = 1.0f; // ????
-    const float V_t = 1.22070313f; // From Diakopoulos
-
-    /// Config
-    float reso, Fs;
-    int oversampling = 1; // 1 means don't oversample
-
-    /// State
-    double y_a, y_b, y_c, y_d;
-    double w_a, w_b, w_c;
-
-    /// Cache
-    double s, v;
-    float cutoff;
-
-    public MoogFilter(float sampleRate)
+    public class FilterLowPass : AudioFilterBase
     {
-        Fs = sampleRate;
-        v = V_t * 0.5f; // 1/2V_t
-    }
+        /// Static config
+        const float C = 1.0f; // ????
+        const float V_t = 1.22070313f; // From Diakopoulos
 
-    public void process_mono(float[] samples, uint n)
-    {
-        for (int i = 0; i < n; ++i)
+        /// Config
+        float reso, Fs;
+        int oversampling = 1; // 1 means don't oversample
+
+        /// State
+        double y_a, y_b, y_c, y_d;
+        double w_a, w_b, w_c;
+
+        /// Cache
+        double s, v;
+        float cutoff;
+
+        public FilterLowPass(float sampleRate)
         {
-            float x = samples[i]; // x = input sample
-            for (int j = 0; j < oversampling; ++j)
-            {
-                y_a += s * (Tanh(x - 4 * reso * y_d * v) - w_a);
-                w_a = Tanh(y_a * v); y_b += s * (w_a - w_b);
-                w_b = Tanh(y_b * v); y_c += s * (w_b - w_c);
-                w_c = Tanh(y_c * v); y_d += s * (w_c - Tanh(y_d * v));
-            }
-            samples[i] = (float)y_d; // y_d = output sample
+            Fs = sampleRate;
+            v = V_t * 0.5f; // 1/2V_t
         }
-    }
 
-    public void process_mono_stride(float[] samples, int sample_count, int offset, int stride)
-    {
-        int idx = offset;
-        for (int i = 0; i < sample_count; ++i)
+        public void process_mono(float[] samples, uint n)
         {
-            float x = samples[idx]; // x = input sample
-            for (int j = 0; j < oversampling; ++j)
+            for (int i = 0; i < n; ++i)
             {
-                y_a += s * (Tanh(x - 4 * reso * y_d * v) - w_a);
-                w_a = Tanh(y_a * v); y_b += s * (w_a - w_b);
-                w_b = Tanh(y_b * v); y_c += s * (w_b - w_c);
-                w_c = Tanh(y_c * v); y_d += s * (w_c - Tanh(y_d * v));
+                float x = samples[i]; // x = input sample
+                for (int j = 0; j < oversampling; ++j)
+                {
+                    y_a += s * (Tanh(x - 4 * reso * y_d * v) - w_a);
+                    w_a = Tanh(y_a * v); y_b += s * (w_a - w_b);
+                    w_b = Tanh(y_b * v); y_c += s * (w_b - w_c);
+                    w_c = Tanh(y_c * v); y_d += s * (w_c - Tanh(y_d * v));
+                }
+                samples[i] = (float)y_d; // y_d = output sample
             }
-            samples[idx] = (float)y_d; // y_d = output sample
-            idx += stride;
         }
-    }
 
-    public void SetResonance(float r)
-    {
-        reso = r;
-    }
+        public override void SetExpression(float data)
+        {
+            //throw new System.NotImplementedException();
+        }
 
-    public void SetCutoff(float c)
-    {
-        const float PI2 = 6.28318530717959f;
-        const float iDontUnderstandWhyThisNeedsToBeHere = PI2;
+        public override void SetParameters(SynthSettingsObjectFilter settingsObjectFilter)
+        {
+            reso = settingsObjectFilter.lowPassSettings.resonance;
+            SetCutoff(settingsObjectFilter.lowPassSettings.cutoffFrequency);
+        }
 
-        cutoff = c;
-        s = c / C / Fs / oversampling * iDontUnderstandWhyThisNeedsToBeHere;
-    }
+        private float _cutoffMod = 1;
+        public override void HandleModifiers(float mod1)
+        {
+            _cutoffMod = mod1;
+        }
 
-    public void SetOversampling(int iterationCount)
-    {
-        oversampling = iterationCount;
-        if (oversampling < 1)
-            oversampling = 1;
-        SetCutoff(cutoff);
+        public override void process_mono_stride(float[] samples, int sample_count, int offset, int stride)
+        {
+            int idx = offset;
+            for (int i = 0; i < sample_count; ++i)
+            {
+                float x = samples[idx]; // x = input sample
+                for (int j = 0; j < oversampling; ++j)
+                {
+                    y_a += s * (Tanh(x - 4 * reso * y_d * v) - w_a);
+                    w_a = Tanh(y_a * v); y_b += s * (w_a - w_b);
+                    w_b = Tanh(y_b * v); y_c += s * (w_b - w_c);
+                    w_c = Tanh(y_c * v); y_d += s * (w_c - Tanh(y_d * v));
+                }
+                samples[idx] = (float)y_d; // y_d = output sample
+                idx += stride;
+            }
+        }
+
+
+        private void SetCutoff(float c)
+        {
+            cutoff = c;
+            s = c / C / Fs / oversampling * 6.28318530717959f * _cutoffMod; 
+        }
+
+        public void SetOversampling(int iterationCount)
+        {
+            oversampling = iterationCount;
+            if (oversampling < 1)
+                oversampling = 1;
+            SetCutoff(cutoff);
+        }
     }
 }

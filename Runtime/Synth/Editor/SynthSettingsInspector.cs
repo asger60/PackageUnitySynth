@@ -3,13 +3,15 @@ using LooperAPP.AudioSystem.Editor;
 using Rytmos.AudioSystem;
 using UnityEditor;
 using UnityEngine;
+using UnitySynth.Runtime.AudioSystem;
+using UnitySynth.Runtime.Synth;
 
 namespace Synth.Editor
 {
-    [CustomEditor(typeof(InstrumentObjectSynth))]
+    [CustomEditor(typeof(UnitySynthPreset))]
     public class SynthSettingsInspector : UnityEditor.Editor
     {
-        private InstrumentObjectSynth _settingsObject;
+        private UnitySynthPreset _settingsObject;
         private bool _showFilterMods;
         private bool _showAmpMods;
         private bool _showPitchMods;
@@ -18,7 +20,7 @@ namespace Synth.Editor
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
-            if (_settingsObject == null) _settingsObject = (InstrumentObjectSynth) this.target;
+            if (_settingsObject == null) _settingsObject = (UnitySynthPreset) this.target;
             if (_settingsObject == null) return;
 
             GUILayout.Space(10);

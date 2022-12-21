@@ -21,12 +21,13 @@
 using System;
 using System.Collections.Generic;
 using LooperAPP.AudioSystem;
-using Synth.Filter;
+using Synth;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnitySynth.Runtime.Synth;
+using UnitySynth.Runtime.AudioSystem;
+using UnitySynth.Runtime.Synth.Filter;
 
-namespace Synth
+namespace UnitySynth.Runtime.Synth
 {
     [RequireComponent(typeof(AudioSource))]
     public class MoogSynth : MonoBehaviour
@@ -47,10 +48,10 @@ namespace Synth
         [Header("Filter")] public SynthControlBase[] filterModifiers;
 
         // Synth state
-        private MoogFilter _filter1, _filter2;
+        //private MoogFilter _filter1, _filter2;
 
-        private FilterBandPass _filterBandPass1, _filterBandPass2;
-        private FilterFormant _filterFormant1, _filterFormant2;
+        //private FilterBandPass _filterBandPass1, _filterBandPass2;
+        //private FilterFormant _filterFormant1, _filterFormant2;
         private AudioFilterBase[] _currentFilters;
 
         //ADSR fenv;
@@ -80,7 +81,7 @@ namespace Synth
 
         private EventQueue.QueuedEvent nextEvent;
         private bool eventIsWaiting = false;
-        private InstrumentObjectSynth _preset;
+        private UnitySynthPreset _preset;
 
         /// Public interface
         public bool queue_event(EventQueue.EventType evtType, int note, int data, double eventTime)
@@ -105,7 +106,7 @@ namespace Synth
         }
 
 
-        public void SetPreset(InstrumentObjectSynth preset)
+        public void SetPreset(UnitySynthPreset preset)
         {
             _preset = preset;
             _preset.RuntimeBind(this);
@@ -236,12 +237,9 @@ namespace Synth
 
 
                 _notes = currentEvent.notes;
-
                 update_params();
-                
-                _filterFormant1.SetVowel(currentEvent.data);
-                _filterFormant2.SetVowel(currentEvent.data);
-                
+
+
                 foreach (var ampModifier in amplitudeModifiers)
                 {
                     ampModifier.NoteOn();
@@ -256,7 +254,6 @@ namespace Synth
                 {
                     frequencyModifier.NoteOn();
                 }
-                //filterCutOffModifier.NoteOn();
             }
             else
             {
@@ -271,8 +268,6 @@ namespace Synth
                 }
             }
 
-            //fenv.SetGate(note_is_on);
-            //aenv.SetGate(note_is_on);
         }
 
 
@@ -355,27 +350,32 @@ namespace Synth
 
             this.sample_rate = sample_rate;
 
-            _filter1 = new MoogFilter(sample_rate);
-            _filter2 = new MoogFilter(sample_rate);
+            //_filter1 = new MoogFilter(sample_rate);
+            //_filter2 = new MoogFilter(sample_rate);
+//
+            //_filterBandPass1 = new FilterBandPass(sample_rate);
+            //_filterBandPass2 = new FilterBandPass(sample_rate);
+//
+            //_filterFormant1 = new FilterFormant(sample_rate);
+            //_filterFormant2 = new FilterFormant(sample_rate);
 
-            _filterBandPass1 = new FilterBandPass(sample_rate);
-            _filterBandPass2 = new FilterBandPass(sample_rate);
-
-            _filterFormant1 = new FilterFormant(sample_rate);
-            _filterFormant2 = new FilterFormant(sample_rate);
-
-            switch (_preset.filterType)
+            switch (_preset.filterSettings[0].filterType)
             {
-                case InstrumentObjectSynth.FilterTypes.LowPass:
+                case SynthSettingsObjectFilter.FilterTypes.LowPass:
+                    _currentFilters = new AudioFilterBase[]
+                    {
+                        new FilterLowPass(sample_rate),
+                        new FilterLowPass(sample_rate)
+                    };
                     break;
-                case InstrumentObjectSynth.FilterTypes.BandPass:
+                case SynthSettingsObjectFilter.FilterTypes.BandPass:
                     _currentFilters = new AudioFilterBase[]
                     {
                         new FilterBandPass(sample_rate),
                         new FilterBandPass(sample_rate)
                     };
                     break;
-                case InstrumentObjectSynth.FilterTypes.Formant:
+                case SynthSettingsObjectFilter.FilterTypes.Formant:
                     _currentFilters = new AudioFilterBase[]
                     {
                         new FilterFormant(sample_rate),
@@ -468,36 +468,35 @@ namespace Synth
 
             //float env01 = fenv.quad_down01();
 
-            _filter1.SetResonance(_preset.resonance);
-            _filter2.SetResonance(_preset.resonance);
 
-            _filterBandPass1.SetQ(_preset.resonance);
-            _filterBandPass2.SetQ(_preset.resonance);
-
-            foreach (var audioFilterBase in _currentFilters)
-            {
-                audioFilterBase.SetExpression(0);
-            }
-            
             //_filterFormant1.SetVowel(_preset.vowel);
             //_filterFormant2.SetVowel(_preset.vowel);
 
 
-            float cutOffFreq = _preset.cutoffFrequency /* * fenv.Process() * (1 + filterCutOffModifier.Process())*/;
+            float cutOffFreq =
+                _preset.filterSettings[0].lowPassSettings
+                    .cutoffFrequency /* * fenv.Process() * (1 + filterCutOffModifier.Process())*/;
             foreach (var filterModifier in filterModifiers)
             {
                 cutOffFreq *= filterModifier.Process();
             }
 
-            _filter1.SetCutoff(cutOffFreq); // 0 Hz cutoff is bad
-            _filter2.SetCutoff(cutOffFreq);
+            for (var i = 0; i < _currentFilters.Length; i++)
+            {
+                var audioFilterBase = _currentFilters[i];
+                audioFilterBase.SetParameters(_preset.filterSettings[0]);
+                audioFilterBase.SetExpression(0);
+            }
 
-            _filterBandPass1.SetFrequency(cutOffFreq);
-            _filterBandPass2.SetFrequency(cutOffFreq);
-
-
-            _filter1.SetOversampling(_preset.oversampling);
-            _filter2.SetOversampling(_preset.oversampling);
+            //_filter1.SetCutoff(cutOffFreq); // 0 Hz cutoff is bad
+            //_filter2.SetCutoff(cutOffFreq);
+//
+            //_filterBandPass1.SetFrequency(cutOffFreq);
+            //_filterBandPass2.SetFrequency(cutOffFreq);
+//
+//
+            //_filter1.SetOversampling(_preset.oversampling);
+            //_filter2.SetOversampling(_preset.oversampling);
         }
 
         private void render_float32_stereo_interleaved(float[] buffer, int sample_frames)
@@ -622,18 +621,29 @@ namespace Synth
                 //_pulseWidthLfo.update();
 
 
-                float cutOffFreq = _preset.cutoffFrequency /* * fenv.Process() * (filterCutOffModifier.Process())*/;
+                //float cutOffFreq = _preset.cutoffFrequency /* * fenv.Process() * (filterCutOffModifier.Process())*/;
                 foreach (var filterModifier in filterModifiers)
                 {
-                    cutOffFreq *= filterModifier.Process();
+                    //cutOffFreq *= filterModifier.Process();
                 }
 
-                _filter1.SetCutoff(cutOffFreq); // 0 Hz cutoff is bad
-                _filter2.SetCutoff(cutOffFreq);
+                foreach (var audioFilterBase in _currentFilters)
+                {
+                    float currentMod = 1;
+                    foreach (var filterModifier in filterModifiers)
+                    {
+                        currentMod *= filterModifier.Process();
+                    }
 
+                    audioFilterBase.HandleModifiers(currentMod);
 
-                _filterBandPass1.SetFrequency(cutOffFreq);
-                _filterBandPass2.SetFrequency(cutOffFreq);
+                }
+                
+                //_filter1.SetCutoff(cutOffFreq); // 0 Hz cutoff is bad
+                //_filter2.SetCutoff(cutOffFreq);
+//
+                //_filterBandPass1.SetFrequency(cutOffFreq);
+                //_filterBandPass2.SetFrequency(cutOffFreq);
             }
 
 
@@ -641,12 +651,13 @@ namespace Synth
             //_filter1.process_mono_stride(buffer, sample_frames, 0, 2);
             //_filter2.process_mono_stride(buffer, sample_frames, 1, 2);
 
-            _filterFormant1.process_mono_stride(buffer, sample_frames, 0, 2);
-            _filterFormant2.process_mono_stride(buffer, sample_frames, 1, 2);
-            
+            //_filterFormant1.process_mono_stride(buffer, sample_frames, 0, 2);
+            //_filterFormant2.process_mono_stride(buffer, sample_frames, 1, 2);
+
             for (var i = 0; i < _currentFilters.Length; i++)
             {
                 var audioFilterBase = _currentFilters[i];
+                audioFilterBase.SetParameters(_preset.filterSettings[0]);
                 audioFilterBase.process_mono_stride(buffer, sample_frames, i, 2);
             }
         }

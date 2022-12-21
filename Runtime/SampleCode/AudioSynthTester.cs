@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 public class AudioSynthTester : MonoBehaviour
 {
-    public InstrumentObjectSynth preset;
+    public UnitySynthPreset preset;
     private AudioSynthPlayer _audioSynthPlayer;
     private float _lastNoteTime;
     public float playNoteInterval;

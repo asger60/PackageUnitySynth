@@ -1,7 +1,7 @@
+using Synth;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Synth
+namespace UnitySynth.Runtime.Synth
 {
     [CreateAssetMenu(fileName = "New Oscillator", menuName = "Rytmos/Synth/SynthSettingsObjectOscillator")]
     public class SynthSettingsObjectOscillator : SynthSettingsObjectBase

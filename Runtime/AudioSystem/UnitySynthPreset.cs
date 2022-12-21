@@ -1,25 +1,18 @@
 ﻿using Synth;
 using UnityEngine;
+using UnitySynth.Runtime.Synth;
 
-namespace LooperAPP.AudioSystem
+namespace UnitySynth.Runtime.AudioSystem
 {
-    [CreateAssetMenu(fileName = "New instrument object", menuName = "Rytmos/AudioObjects/InstrumentObjectSynth")]
-    public class InstrumentObjectSynth : ScriptableObject
+    [CreateAssetMenu(fileName = "New instrument object", menuName = "UnitySynth/SynthPreset")]
+    public class UnitySynthPreset : ScriptableObject
     {
-        public int noteOffset = 0;
-        [Header("Filter")] [Range(10, 24000)] public float cutoffFrequency;
-        [Range(0, 1)] public float resonance;
+        //[Header("Filter")] [Range(10, 24000)] public float cutoffFrequency;
+        //[Range(0, 1)] public float resonance;
 
         [Range(1, 4)] public int oversampling = 1;
 
-        public enum FilterTypes
-        {
-            LowPass,
-            BandPass,
-            Formant
-        }
 
-        public FilterTypes filterType;
         
         //[Header("Pulse-width Modulation")]
         //[Range(0, 1)]
@@ -30,6 +23,10 @@ namespace LooperAPP.AudioSystem
 
         public SynthSettingsObjectOscillator[] oscillatorSettings;
 
+
+        public SynthSettingsObjectFilter[] filterSettings;
+        
+        
         [HideInInspector] public SynthSettingsObjectBase[] pitchModifiers;
 
         [HideInInspector] public SynthSettingsObjectBase[] amplitudeModifiers;
@@ -50,14 +47,6 @@ namespace LooperAPP.AudioSystem
                 _runtimeSynth.ReBuildSynth();
         }
 
-
-        public  float GetVolume()
-        {
-            return 0;
-        }
-
-        public  void PreviewSound()
-        {
-        }
+        
     }
 }

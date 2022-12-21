@@ -1,8 +1,7 @@
-using Synth.Filter;
 using UnityEngine;
-using UnitySynth.Runtime.Synth;
+using UnitySynth.Runtime.Synth.Filter;
 
-namespace Synth
+namespace UnitySynth.Runtime.Synth
 {
     public class FilterFormant : AudioFilterBase
     {
@@ -155,6 +154,15 @@ namespace Synth
         }
 
 
+        public override void SetParameters(SynthSettingsObjectFilter settingsObjectFilter)
+        {
+            SetVowel(settingsObjectFilter.formantSettings.vowel);
+        }
+
+        public override void HandleModifiers(float mod1)
+        {
+            throw new System.NotImplementedException();
+        }
 
         public override void process_mono_stride(float[] samples, int sample_count, int offset, int stride)
         {

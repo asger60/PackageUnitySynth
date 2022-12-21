@@ -1,6 +1,7 @@
 using System;
 using Synth;
 using UnityEngine;
+using UnitySynth.Runtime.Synth;
 using Random = UnityEngine.Random;
 
 public class SynthOscillator : MonoBehaviour

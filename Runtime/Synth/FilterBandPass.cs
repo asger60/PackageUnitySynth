@@ -1,5 +1,5 @@
-using Synth.Filter;
 using UnityEngine;
+using UnitySynth.Runtime.Synth.Filter;
 
 namespace UnitySynth.Runtime.Synth
 {
@@ -33,6 +33,15 @@ namespace UnitySynth.Runtime.Synth
         {
         }
 
+        public override void SetParameters(SynthSettingsObjectFilter settingsObjectFilter)
+        {
+            _filterFrequency = settingsObjectFilter.bandPassSettings.frequency;
+            _q = settingsObjectFilter.bandPassSettings.bandWidth;
+        }
+
+        public override void HandleModifiers(float mod1)
+        {
+        }
 
 
         public override void process_mono_stride(float[] samples, int sample_count, int offset, int stride)
