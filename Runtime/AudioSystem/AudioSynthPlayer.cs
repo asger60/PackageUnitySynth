@@ -7,7 +7,7 @@ namespace LooperAPP.AudioSystem
 {
     public class AudioSynthPlayer : AudioPlayerBase
     {
-        private MoogSynth _synth;
+        private UnitySynth.Runtime.Synth.UnitySynth _synth;
         private int _currentNote;
         private UnitySynthPreset _settings;
         public UnitySynthPreset Settings => _settings;

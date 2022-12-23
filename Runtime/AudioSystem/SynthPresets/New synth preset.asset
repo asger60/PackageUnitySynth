@@ -96,6 +96,21 @@ MonoBehaviour:
   noiseType: 0
   waveTableOscillatorType: 0
   oscillatorType: 0
+--- !u!114 &5256913699219537731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2696701b9eb054b50aac1114417c9ed0, type: 3}
+  m_Name: Filter LFO
+  m_EditorClassIdentifier: 
+  amp: 0
+  frequency: 0
+  fadeInDuration: 0
 --- !u!114 &6630053909166128073
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using LooperAPP.AudioSystem;
 using Synth;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -30,7 +29,7 @@ using UnitySynth.Runtime.Synth.Filter;
 namespace UnitySynth.Runtime.Synth
 {
     [RequireComponent(typeof(AudioSource))]
-    public class MoogSynth : MonoBehaviour
+    public class UnitySynth : MonoBehaviour
     {
         [Header("Voices")] public SynthOscillator[] oscillators;
 

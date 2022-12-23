@@ -24,7 +24,7 @@ using UnityEngine;
 
 namespace UnitySynth.Runtime.Synth.Editor
 {
-    [CustomEditor(typeof(MoogSynth)), CanEditMultipleObjects]
+    [CustomEditor(typeof(UnitySynth)), CanEditMultipleObjects]
     public class MoogSynthInspector : UnityEditor.Editor
     {
         private enum OscilloscopeMode
@@ -49,7 +49,7 @@ namespace UnitySynth.Runtime.Synth.Editor
 
         public override void OnInspectorGUI()
         {
-            MoogSynth parent = target as MoogSynth;
+            UnitySynth parent = target as UnitySynth;
 
             //serializedObject.Update();
 

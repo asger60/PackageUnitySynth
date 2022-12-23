@@ -21,9 +21,9 @@ namespace UnitySynth.Runtime.AudioSystem
         [HideInInspector] public SynthSettingsObjectBase[] filterModifiers;
 
 
-        private MoogSynth _runtimeSynth;
+        private Synth.UnitySynth _runtimeSynth;
 
-        public void RuntimeBind(MoogSynth synth)
+        public void RuntimeBind(Synth.UnitySynth synth)
         {
             _runtimeSynth = synth;
         }

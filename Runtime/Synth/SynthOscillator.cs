@@ -99,7 +99,7 @@ public class SynthOscillator : MonoBehaviour
     public void SetNote(int note)
     {
         _currentNote = note + _settings.tuning;
-        set_freq(MoogSynth.freqtab[_currentNote & 0x7f]);
+        set_freq(UnitySynth.Runtime.Synth.UnitySynth.freqtab[_currentNote & 0x7f]);
     }
 
     public void SetPitchMod(float amount)
