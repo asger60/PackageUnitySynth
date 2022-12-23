@@ -78,6 +78,7 @@ MonoBehaviour:
   - {fileID: 6630053909166128073}
   filterModifiers:
   - {fileID: -2866235886569171840}
+  - {fileID: 5256913699219537731}
 --- !u!114 &3666184379365354404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,9 +109,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2696701b9eb054b50aac1114417c9ed0, type: 3}
   m_Name: Filter LFO
   m_EditorClassIdentifier: 
-  amp: 0
-  frequency: 0
-  fadeInDuration: 0
+  amp: 1
+  frequency: 10
+  fadeInDuration: 0.01
 --- !u!114 &6630053909166128073
 MonoBehaviour:
   m_ObjectHideFlags: 0

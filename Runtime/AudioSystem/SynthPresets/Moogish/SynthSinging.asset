@@ -1,5 +1,20 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8428507924788519455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2696701b9eb054b50aac1114417c9ed0, type: 3}
+  m_Name: Pitch LFO
+  m_EditorClassIdentifier: 
+  amp: 0.25
+  frequency: 6.67
+  fadeInDuration: 0.73
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18,7 +33,8 @@ MonoBehaviour:
   - {fileID: 8750364939061395120}
   filterSettings:
   - {fileID: 8723426199629735546}
-  pitchModifiers: []
+  pitchModifiers:
+  - {fileID: -8428507924788519455}
   amplitudeModifiers:
   - {fileID: 3943306911989720775}
   filterModifiers: []
@@ -34,10 +50,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
   m_Name: Amplitude Envelope
   m_EditorClassIdentifier: 
-  attack: 1
-  decay: 1
+  attack: 0.12
+  decay: 0.33
   sustain: 0.5
-  release: 1
+  release: 0.79
 --- !u!114 &8723426199629735546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,7 +75,7 @@ MonoBehaviour:
     frequency: 1000
     bandWidth: 10
   formantSettings:
-    vowel: 3
+    vowel: 6
 --- !u!114 &8750364939061395120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,5 +92,5 @@ MonoBehaviour:
   amplitude: 1
   simpleOscillatorType: 1
   noiseType: 0
-  waveTableOscillatorType: 0
+  waveTableOscillatorType: 2
   oscillatorType: 0
