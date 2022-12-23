@@ -1,9 +1,9 @@
-using LooperAPP.AudioSystem.Editor;
 using Synth;
 using Synth.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnitySynth.Runtime.AudioSystem;
+using UnitySynth.Runtime.AudioSystem.Editor;
 
 namespace UnitySynth.Runtime.Synth.Editor
 {
@@ -14,28 +14,32 @@ namespace UnitySynth.Runtime.Synth.Editor
         private bool _showFilterMods;
         private bool _showAmpMods;
         private bool _showPitchMods;
-        private bool _showOscillators;
         private bool _showFilters;
 
         public override void OnInspectorGUI()
         {
-            
-            DrawDefaultInspector();
-            if (_settingsObject == null) _settingsObject = (UnitySynthPreset) this.target;
+            //DrawDefaultInspector();
+            if (_settingsObject == null) _settingsObject = (UnitySynthPreset)this.target;
             if (_settingsObject == null) return;
             if (!_settingsObject.isInit)
             {
-                InitPreset();
+                if (GUILayout.Button("Init"))
+                {
+                    InitPreset();
+                }
                 return;
             }
-            
+
             GUILayout.Space(10);
-            _showOscillators = EditorGUILayout.Foldout(_showOscillators, "Oscillators");
-            if (_showOscillators)
+            _settingsObject.showOscillator = EditorGUILayout.Foldout(_settingsObject.showOscillator, "Oscillators");
+            if (_settingsObject.showOscillator)
             {
-                foreach (var osc in _settingsObject.oscillatorSettings)
+                if (_settingsObject.oscillatorSettings.Length > 0)
                 {
-                    SynthOSCInspector.Draw(this, osc);
+                    foreach (var osc in _settingsObject.oscillatorSettings)
+                    {
+                        SynthOSCInspector.Draw(this, osc);
+                    }
                 }
 
                 GUILayout.BeginHorizontal();
@@ -46,7 +50,7 @@ namespace UnitySynth.Runtime.Synth.Editor
 
                 GUILayout.EndHorizontal();
             }
-            
+
             GUILayout.Space(10);
             _showFilters = EditorGUILayout.Foldout(_showFilters, "Filters");
             if (_showFilters)
@@ -64,8 +68,8 @@ namespace UnitySynth.Runtime.Synth.Editor
 
                 GUILayout.EndHorizontal();
             }
-            
-            
+
+
             GUILayout.Space(10);
             _showPitchMods = EditorGUILayout.Foldout(_showPitchMods, "Pitch Modifiers");
             if (_showPitchMods)
@@ -75,10 +79,10 @@ namespace UnitySynth.Runtime.Synth.Editor
                     switch (ampMod)
                     {
                         case SynthSettingsObjectLFO lfoMod:
-                            SynthLFOInspector.Draw(this, lfoMod);
+                            SynthLfoInspector.Draw(this, lfoMod, "pitchModifiers");
                             break;
                         case SynthSettingsObjectEnvelope envMod:
-                            SynthEnvelopeInspector.Draw(this, envMod);
+                            SynthEnvelopeInspector.Draw(this, envMod, "pitchModifiers");
                             break;
                     }
                 }
@@ -96,8 +100,8 @@ namespace UnitySynth.Runtime.Synth.Editor
 
                 GUILayout.EndHorizontal();
             }
-            
-            
+
+
             GUILayout.Space(10);
             _showAmpMods = EditorGUILayout.Foldout(_showAmpMods, "Amplitude Modifiers");
             if (_showAmpMods)
@@ -107,10 +111,10 @@ namespace UnitySynth.Runtime.Synth.Editor
                     switch (ampMod)
                     {
                         case SynthSettingsObjectLFO lfoMod:
-                            SynthLFOInspector.Draw(this, lfoMod);
+                            SynthLfoInspector.Draw(this, lfoMod, "amplitudeModifiers");
                             break;
                         case SynthSettingsObjectEnvelope envMod:
-                            SynthEnvelopeInspector.Draw(this, envMod);
+                            SynthEnvelopeInspector.Draw(this, envMod, "amplitudeModifiers");
                             break;
                     }
                 }
@@ -139,10 +143,10 @@ namespace UnitySynth.Runtime.Synth.Editor
                     switch (filterMod)
                     {
                         case SynthSettingsObjectLFO lfoMod:
-                            SynthLFOInspector.Draw(this, lfoMod);
+                            SynthLfoInspector.Draw(this, lfoMod, "filterModifiers");
                             break;
                         case SynthSettingsObjectEnvelope envMod:
-                            SynthEnvelopeInspector.Draw(this, envMod);
+                            SynthEnvelopeInspector.Draw(this, envMod, "filterModifiers");
                             break;
                     }
                 }
@@ -161,7 +165,6 @@ namespace UnitySynth.Runtime.Synth.Editor
                 GUILayout.EndHorizontal();
                 EditorGUI.indentLevel = 0;
             }
-
         }
 
         void CreateEnvelopeMod(string propertyName, string settingsName)
@@ -193,6 +196,7 @@ namespace UnitySynth.Runtime.Synth.Editor
         {
             SerializedProperty filterList = serializedObject.FindProperty(propertyName);
             var newOSC = _settingsObject.AddElement<SynthSettingsObjectOscillator>(filterList, settingsName);
+            newOSC.Init();
             serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(_settingsObject);
             _settingsObject.ReBuildSynth();
@@ -207,6 +211,7 @@ namespace UnitySynth.Runtime.Synth.Editor
             EditorUtility.SetDirty(_settingsObject);
             _settingsObject.ReBuildSynth();
         }
+
         public void RebuildSynth()
         {
             _settingsObject.ReBuildSynth();
@@ -214,16 +219,18 @@ namespace UnitySynth.Runtime.Synth.Editor
 
         private void InitPreset()
         {
+            Debug.Log("init preset");
             CreateOscillator("oscillatorSettings", "Oscillator");
             CreateFilter("filterSettings", "Filter");
             _settingsObject.isInit = true;
-            
+            _settingsObject.showOscillator = true;
+            EditorUtility.SetDirty(_settingsObject);
         }
 
-        public void DeleteElement(SynthSettingsObjectBase synthSettings)
+        public void DeleteElement<T>(SynthSettingsObjectBase synthSettings, string listName) where T : ScriptableObject
         {
-            SerializedProperty filterList = serializedObject.FindProperty("filterModifiers");
-            synthSettings.RemoveElement<SynthSettingsObjectEnvelope>(filterList);
+            SerializedProperty filterList = serializedObject.FindProperty(listName);
+            synthSettings.RemoveElement<T>(filterList);
             serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(_settingsObject);
         }

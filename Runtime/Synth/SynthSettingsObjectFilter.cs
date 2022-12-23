@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace UnitySynth.Runtime.Synth
 {
-    [CreateAssetMenu(fileName = "New filter", menuName = "UnitySynth/SynthSettingsObjectFilter")]
     public class SynthSettingsObjectFilter : SynthSettingsObjectBase
     {
         public enum FilterTypes
@@ -45,7 +44,7 @@ namespace UnitySynth.Runtime.Synth
 
         public void Init()
         {
-            lowPassSettings.oversampling = 1;
+            lowPassSettings.oversampling = 2;
             lowPassSettings.cutoffFrequency = 24000;
             lowPassSettings.resonance = 0.25f;
 

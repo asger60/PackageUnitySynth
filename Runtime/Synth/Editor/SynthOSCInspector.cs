@@ -1,10 +1,8 @@
 using System;
 using UnityEditor;
 using UnityEngine;
-using UnitySynth.Runtime.Synth;
-using UnitySynth.Runtime.Synth.Editor;
 
-namespace Synth.Editor
+namespace UnitySynth.Runtime.Synth.Editor
 {
     public class SynthOSCInspector : UnityEditor.Editor
     {
@@ -13,7 +11,7 @@ namespace Synth.Editor
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
-                parent.DeleteElement(settings);
+                parent.DeleteElement<SynthSettingsObjectOscillator>(settings, "oscillatorSettings");
             }
 
             EditorGUILayout.PrefixLabel("Voice", new GUIStyle {fontStyle = FontStyle.Bold});

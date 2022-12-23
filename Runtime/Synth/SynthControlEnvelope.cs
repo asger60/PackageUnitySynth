@@ -1,5 +1,6 @@
 using Synth;
 using UnityEngine;
+using UnitySynth.Runtime.Synth;
 
 public class SynthControlEnvelope : SynthControlBase
 {

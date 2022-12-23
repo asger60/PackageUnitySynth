@@ -1,8 +1,5 @@
-using UnityEngine;
-
-namespace Synth
+namespace UnitySynth.Runtime.Synth
 {
-    [CreateAssetMenu(fileName = "New Envelope Settings Object", menuName = "Rytmos/Synth/Envelope Settings")]
 
     public class SynthSettingsObjectEnvelope : SynthSettingsObjectBase
     {

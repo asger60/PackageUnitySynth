@@ -1,5 +1,4 @@
-﻿using Synth;
-using UnityEngine;
+﻿using UnityEngine;
 using UnitySynth.Runtime.Synth;
 
 namespace UnitySynth.Runtime.AudioSystem
@@ -8,7 +7,9 @@ namespace UnitySynth.Runtime.AudioSystem
     public class UnitySynthPreset : ScriptableObject
     {
         [HideInInspector] public bool isInit;
-        
+        [HideInInspector] public bool showOscillator;
+
+
         [HideInInspector] public SynthSettingsObjectOscillator[] oscillatorSettings;
 
         [HideInInspector] public SynthSettingsObjectFilter[] filterSettings;
@@ -33,6 +34,14 @@ namespace UnitySynth.Runtime.AudioSystem
                 _runtimeSynth.ReBuildSynth();
         }
 
-        
+        [ContextMenu("Clean up preset object")]
+        void CleanUpPreset()
+        {
+        }
+
+        private void Reset()
+        {
+            isInit = false;
+        }
     }
 }

@@ -1,17 +1,18 @@
 using UnityEditor;
 using UnityEngine;
+using UnitySynth.Runtime.Synth;
 using UnitySynth.Runtime.Synth.Editor;
 
 namespace Synth.Editor
 {
     public class SynthEnvelopeInspector : UnityEditor.Editor
     {
-        public static void Draw(SynthSettingsInspector parent, SynthSettingsObjectEnvelope settings)
+        public static void Draw(SynthSettingsInspector parent, SynthSettingsObjectEnvelope settings, string listName)
         {
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
-                parent.DeleteElement(settings);
+                parent.DeleteElement<SynthSettingsObjectEnvelope>(settings, listName);
             }
 
             EditorGUILayout.PrefixLabel("Envelope", new GUIStyle {fontStyle = FontStyle.Bold});

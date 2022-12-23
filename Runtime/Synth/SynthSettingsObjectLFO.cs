@@ -1,8 +1,5 @@
-using UnityEngine;
-
-namespace Synth
+namespace UnitySynth.Runtime.Synth
 {
-    [CreateAssetMenu(fileName = "New LFO Settings Object", menuName = "Rytmos/Synth/LFO Settings")]
 
     public class SynthSettingsObjectLFO : SynthSettingsObjectBase
     {

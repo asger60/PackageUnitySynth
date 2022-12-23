@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace UnitySynth.Runtime.Synth
 {
-    [CreateAssetMenu(fileName = "New Oscillator", menuName = "Rytmos/Synth/SynthSettingsObjectOscillator")]
     public class SynthSettingsObjectOscillator : SynthSettingsObjectBase
     {
         public int tuning;
@@ -42,5 +41,10 @@ namespace UnitySynth.Runtime.Synth
 
         public WaveTableOscillatorTypes waveTableOscillatorType;
         public OscillatorType oscillatorType;
+
+        public void Init()
+        {
+            amplitude = 1;
+        }
     }
 }

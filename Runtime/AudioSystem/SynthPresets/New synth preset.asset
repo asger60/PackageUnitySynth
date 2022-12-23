@@ -1,98 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7501709878713572011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
-  m_Name: Amplitude Envelope
-  m_EditorClassIdentifier: 
-  attack: 1
-  decay: 1
-  sustain: 0.5
-  release: 1
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 277ca1c0322b94daebb858c10a325f1d, type: 3}
-  m_Name: SynthLead2
-  m_EditorClassIdentifier: 
-  isInit: 1
-  showOscillator: 1
-  oscillatorSettings:
-  - {fileID: 5318799767019729390}
-  - {fileID: 5445127553670670903}
-  filterSettings:
-  - {fileID: 7052544697985350902}
-  pitchModifiers:
-  - {fileID: 6105662163698251587}
-  amplitudeModifiers:
-  - {fileID: -7501709878713572011}
-  filterModifiers: []
---- !u!114 &5318799767019729390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8c5d75eb90954545a59552f9b363791, type: 3}
-  m_Name: Oscillator
-  m_EditorClassIdentifier: 
-  tuning: 0
-  amplitude: 1
-  simpleOscillatorType: 0
-  noiseType: 0
-  waveTableOscillatorType: 0
-  oscillatorType: 0
---- !u!114 &5445127553670670903
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8c5d75eb90954545a59552f9b363791, type: 3}
-  m_Name: Oscillator
-  m_EditorClassIdentifier: 
-  tuning: 0
-  amplitude: 0
-  simpleOscillatorType: 0
-  noiseType: 0
-  waveTableOscillatorType: 0
-  oscillatorType: 0
---- !u!114 &6105662163698251587
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
-  m_Name: Pitch Envelope
-  m_EditorClassIdentifier: 
-  attack: 1
-  decay: 1
-  sustain: 0.5
-  release: 1
---- !u!114 &7052544697985350902
+--- !u!114 &-8474299204406171126
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -114,3 +22,93 @@ MonoBehaviour:
     bandWidth: 10
   formantSettings:
     vowel: 1
+--- !u!114 &-2866235886569171840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Filter Envelope
+  m_EditorClassIdentifier: 
+  attack: 1
+  decay: 1
+  sustain: 0.5
+  release: 1
+--- !u!114 &-772980829112994981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Pitch Envelope
+  m_EditorClassIdentifier: 
+  attack: 1
+  decay: 1
+  sustain: 0.5
+  release: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 277ca1c0322b94daebb858c10a325f1d, type: 3}
+  m_Name: New synth preset
+  m_EditorClassIdentifier: 
+  isInit: 1
+  showOscillator: 1
+  oscillatorSettings:
+  - {fileID: 3666184379365354404}
+  filterSettings:
+  - {fileID: -8474299204406171126}
+  pitchModifiers:
+  - {fileID: -772980829112994981}
+  amplitudeModifiers:
+  - {fileID: 6630053909166128073}
+  filterModifiers:
+  - {fileID: -2866235886569171840}
+--- !u!114 &3666184379365354404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c5d75eb90954545a59552f9b363791, type: 3}
+  m_Name: Oscillator
+  m_EditorClassIdentifier: 
+  tuning: 0
+  amplitude: 0
+  simpleOscillatorType: 0
+  noiseType: 0
+  waveTableOscillatorType: 0
+  oscillatorType: 0
+--- !u!114 &6630053909166128073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Amplitude Envelope
+  m_EditorClassIdentifier: 
+  attack: 1
+  decay: 1
+  sustain: 0.5
+  release: 1

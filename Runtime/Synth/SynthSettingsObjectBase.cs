@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Synth
+namespace UnitySynth.Runtime.Synth
 {
     public class SynthSettingsObjectBase : ScriptableObject
     {

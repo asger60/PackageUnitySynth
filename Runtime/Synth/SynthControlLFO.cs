@@ -1,6 +1,7 @@
 using System;
 using Synth;
 using UnityEngine;
+using UnitySynth.Runtime.Synth;
 
 public class SynthControlLFO : SynthControlBase
 {

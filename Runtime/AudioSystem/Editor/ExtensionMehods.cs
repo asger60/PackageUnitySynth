@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace LooperAPP.AudioSystem.Editor
+namespace UnitySynth.Runtime.AudioSystem.Editor
 {
     public static class ExtensionMethods
     {

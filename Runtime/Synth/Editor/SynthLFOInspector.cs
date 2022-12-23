@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace UnitySynth.Runtime.Synth.Editor
 {
-    public class SynthLFOInspector : UnityEditor.Editor
+    public class SynthLfoInspector : UnityEditor.Editor
     {
-        public static void Draw(SynthSettingsInspector parent, SynthSettingsObjectLFO settings)
+        public static void Draw(SynthSettingsInspector parent, SynthSettingsObjectLFO settings, string listName)
         {
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
-                parent.DeleteElement(settings);
+                parent.DeleteElement<SynthSettingsObjectLFO>(settings, listName);
             }
 
             EditorGUILayout.PrefixLabel("LFO", new GUIStyle {fontStyle = FontStyle.Bold});

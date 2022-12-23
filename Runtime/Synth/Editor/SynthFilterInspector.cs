@@ -12,7 +12,7 @@ namespace UnitySynth.Runtime.Synth.Editor
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
-                parent.DeleteElement(settings);
+                parent.DeleteElement<SynthSettingsObjectFilter>(settings, "filterSettings");
             }
 
             GUILayout.EndHorizontal();
