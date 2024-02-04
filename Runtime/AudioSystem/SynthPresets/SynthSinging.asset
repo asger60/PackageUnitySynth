@@ -31,13 +31,76 @@ MonoBehaviour:
   showOscillator: 1
   oscillatorSettings:
   - {fileID: 8750364939061395120}
+  - {fileID: 1680484185081292600}
   filterSettings:
-  - {fileID: 8723426199629735546}
+  - {fileID: 2603416687188450313}
   pitchModifiers:
   - {fileID: -8428507924788519455}
   amplitudeModifiers:
   - {fileID: 3943306911989720775}
   filterModifiers: []
+--- !u!114 &1680484185081292600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c5d75eb90954545a59552f9b363791, type: 3}
+  m_Name: Oscillator
+  m_EditorClassIdentifier: 
+  tuning: -12
+  amplitude: 0.113
+  simpleOscillatorType: 1
+  noiseType: 0
+  waveTableOscillatorType: 0
+  oscillatorType: 2
+--- !u!114 &2286703418579535424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0060a0610eaf747e3971f417334fcfb7, type: 3}
+  m_Name: Filter
+  m_EditorClassIdentifier: 
+  filterType: 0
+  lowPassSettings:
+    oversampling: 0
+    cutoffFrequency: 0
+    resonance: 0
+  bandPassSettings:
+    frequency: 0
+    bandWidth: 0
+  formantSettings:
+    vowel: 0
+--- !u!114 &2603416687188450313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0060a0610eaf747e3971f417334fcfb7, type: 3}
+  m_Name: Filter
+  m_EditorClassIdentifier: 
+  filterType: 2
+  lowPassSettings:
+    oversampling: 3
+    cutoffFrequency: 5762
+    resonance: 0.905
+  bandPassSettings:
+    frequency: 810
+    bandWidth: 24.3
+  formantSettings:
+    vowel: 5
 --- !u!114 &3943306911989720775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54,28 +117,6 @@ MonoBehaviour:
   decay: 0.33
   sustain: 0.5
   release: 0.79
---- !u!114 &8723426199629735546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0060a0610eaf747e3971f417334fcfb7, type: 3}
-  m_Name: Filter
-  m_EditorClassIdentifier: 
-  filterType: 2
-  lowPassSettings:
-    oversampling: 2
-    cutoffFrequency: 24000
-    resonance: 0.25
-  bandPassSettings:
-    frequency: 1000
-    bandWidth: 10
-  formantSettings:
-    vowel: 6
 --- !u!114 &8750364939061395120
 MonoBehaviour:
   m_ObjectHideFlags: 0

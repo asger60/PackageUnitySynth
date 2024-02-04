@@ -5,9 +5,9 @@ namespace UnitySynth.Runtime.Synth
 {
     public class FilterFormant : AudioFilterBase
     {
-        private readonly FilterBandPass _filterBandPass1;
-        private readonly FilterBandPass _filterBandPass2;
-        private readonly FilterBandPass _filterBandPass3;
+        private FilterBandPass _filterBandPass1;
+        private FilterBandPass _filterBandPass2;
+        private FilterBandPass _filterBandPass3;
 
         struct FormantBand
         {
@@ -119,18 +119,33 @@ namespace UnitySynth.Runtime.Synth
 
         private FormantVowel _currentVowel;
 
-        public FilterFormant(float sampleRate)
+        public override void SetSettings(SynthSettingsObjectFilter newSettings)
+        {
+            settings = newSettings;
+            Init(44100);
+        }
+
+
+        private void Init(int sampleRate)
         {
             _sampleRate = sampleRate;
-            _filterBandPass1 = new FilterBandPass(sampleRate);
-            _filterBandPass2 = new FilterBandPass(sampleRate);
-            _filterBandPass3 = new FilterBandPass(sampleRate);
+
+            _filterBandPass1 = gameObject.AddComponent<FilterBandPass>();
+            _filterBandPass2 = gameObject.AddComponent<FilterBandPass>();
+            _filterBandPass3 = gameObject.AddComponent<FilterBandPass>();
             _currentVowel = _vowels[3];
+
+            _filterBandPass1.Init(sampleRate);
+            _filterBandPass2.Init(sampleRate);
+            _filterBandPass3.Init(sampleRate);
+            
 
             _filterBandPass1.SetFrequency(_currentVowel.GetBand(0).frequency);
             _filterBandPass1.SetQ(_currentVowel.GetBand(0).q);
+
             _filterBandPass2.SetFrequency(_currentVowel.GetBand(1).frequency);
             _filterBandPass2.SetQ(_currentVowel.GetBand(1).q);
+
             _filterBandPass3.SetFrequency(_currentVowel.GetBand(2).frequency);
             _filterBandPass3.SetQ(_currentVowel.GetBand(2).q);
         }
@@ -150,7 +165,6 @@ namespace UnitySynth.Runtime.Synth
 
         public override void SetExpression(float data)
         {
-            
         }
 
 
@@ -163,28 +177,27 @@ namespace UnitySynth.Runtime.Synth
         {
         }
 
-        public override void process_mono_stride(float[] samples, int sample_count, int offset, int stride)
+        public override void process_mono_stride(float[] samples, int sampleCount, int offset, int stride)
         {
             float[] mix1 = new float[samples.Length];
-            var mix2 = new float[samples.Length];
-            var mix3 = new float[samples.Length];
+            float[] mix2 = new float[samples.Length];
+            float[] mix3 = new float[samples.Length];
             samples.CopyTo(mix1, 0);
             samples.CopyTo(mix2, 0);
             samples.CopyTo(mix3, 0);
 
 
-            _filterBandPass1.process_mono_stride(mix1, sample_count, offset, stride);
-            _filterBandPass2.process_mono_stride(mix2, sample_count, offset, stride);
-            _filterBandPass3.process_mono_stride(mix3, sample_count, offset, stride);
+            _filterBandPass1.process_mono_stride(mix1, sampleCount, offset, stride);
+            _filterBandPass2.process_mono_stride(mix2, sampleCount, offset, stride);
+            _filterBandPass3.process_mono_stride(mix3, sampleCount, offset, stride);
 
             int idx = offset;
-            for (int i = 0; i < sample_count; ++i)
+            for (int i = 0; i < sampleCount; ++i)
             {
-                samples[idx] =
-                    ((mix1[idx] * _currentVowel.GetBand(0).gain) +
-                     (mix2[idx] * _currentVowel.GetBand(1).gain) +
-                     (mix3[idx] * _currentVowel.GetBand(2).gain))
-                    / 3f;
+                samples[idx] = ((mix1[idx] * _currentVowel.GetBand(0).gain) +
+                                (mix2[idx] * _currentVowel.GetBand(1).gain) +
+                                (mix3[idx] * _currentVowel.GetBand(2).gain))
+                               / 3f;
                 idx += stride;
             }
         }

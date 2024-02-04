@@ -177,7 +177,7 @@ namespace UnitySynth.Runtime.Synth.Editor
             newEnvelope.release = 1;
             serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(_settingsObject);
-            _settingsObject.ReBuildSynth();
+            _settingsObject.RebuildSynth();
         }
 
         void CreateLFOMod(string propertyName, string settingsName)
@@ -189,7 +189,7 @@ namespace UnitySynth.Runtime.Synth.Editor
             newEnvelope.fadeInDuration = 0.01f;
             serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(_settingsObject);
-            _settingsObject.ReBuildSynth();
+            _settingsObject.RebuildSynth();
         }
 
         void CreateOscillator(string propertyName, string settingsName)
@@ -199,7 +199,7 @@ namespace UnitySynth.Runtime.Synth.Editor
             newOSC.Init();
             serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(_settingsObject);
-            _settingsObject.ReBuildSynth();
+            _settingsObject.RebuildSynth();
         }
 
         void CreateFilter(string propertyName, string settingsName)
@@ -209,12 +209,12 @@ namespace UnitySynth.Runtime.Synth.Editor
             newFilter.Init();
             serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(_settingsObject);
-            _settingsObject.ReBuildSynth();
+            _settingsObject.RebuildSynth();
         }
 
         public void RebuildSynth()
         {
-            _settingsObject.ReBuildSynth();
+            _settingsObject.RebuildSynth();
         }
 
         private void InitPreset()

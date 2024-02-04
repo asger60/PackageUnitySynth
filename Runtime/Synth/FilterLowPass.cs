@@ -116,33 +116,19 @@ namespace UnitySynth.Runtime.Synth
             Fs = sampleRate;
             v = V_t * 0.5f; // 1/2V_t
         }
-
-        public void process_mono(float[] samples, uint n)
-        {
-            for (int i = 0; i < n; ++i)
-            {
-                float x = samples[i]; // x = input sample
-                for (int j = 0; j < oversampling; ++j)
-                {
-                    y_a += s * (Tanh(x - 4 * reso * y_d * v) - w_a);
-                    w_a = Tanh(y_a * v); y_b += s * (w_a - w_b);
-                    w_b = Tanh(y_b * v); y_c += s * (w_b - w_c);
-                    w_c = Tanh(y_c * v); y_d += s * (w_c - Tanh(y_d * v));
-                }
-                samples[i] = (float)y_d; // y_d = output sample
-            }
-        }
+        
 
         public override void SetExpression(float data)
         {
-            //throw new System.NotImplementedException();
+            
         }
 
         public override void SetParameters(SynthSettingsObjectFilter settingsObjectFilter)
         {
-            reso = settingsObjectFilter.lowPassSettings.resonance;
-            SetCutoff(settingsObjectFilter.lowPassSettings.cutoffFrequency);
-            SetOversampling(settingsObjectFilter.lowPassSettings.oversampling);
+            settings = settingsObjectFilter;
+            reso = settings.lowPassSettings.resonance;
+            SetCutoff(settings.lowPassSettings.cutoffFrequency);
+            SetOversampling(settings.lowPassSettings.oversampling);
         }
 
         private float _cutoffMod = 1;
@@ -151,10 +137,17 @@ namespace UnitySynth.Runtime.Synth
             _cutoffMod = mod1;
         }
 
-        public override void process_mono_stride(float[] samples, int sample_count, int offset, int stride)
+        public override void SetSettings(SynthSettingsObjectFilter newSettings)
+        {
+            Fs = 44100;
+            v = V_t * 0.5f; // 1/2V_t
+            settings = newSettings;
+        }
+
+        public override void process_mono_stride(float[] samples, int sampleCount, int offset, int stride)
         {
             int idx = offset;
-            for (int i = 0; i < sample_count; ++i)
+            for (int i = 0; i < sampleCount; ++i)
             {
                 float x = samples[idx]; // x = input sample
                 for (int j = 0; j < oversampling; ++j)

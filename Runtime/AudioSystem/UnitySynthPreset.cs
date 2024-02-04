@@ -8,30 +8,24 @@ namespace UnitySynth.Runtime.AudioSystem
     {
         [HideInInspector] public bool isInit;
         [HideInInspector] public bool showOscillator;
-
-
         [HideInInspector] public SynthSettingsObjectOscillator[] oscillatorSettings;
-
         [HideInInspector] public SynthSettingsObjectFilter[] filterSettings;
-
         [HideInInspector] public SynthSettingsObjectBase[] pitchModifiers;
-
         [HideInInspector] public SynthSettingsObjectBase[] amplitudeModifiers;
-
         [HideInInspector] public SynthSettingsObjectBase[] filterModifiers;
 
 
         private Synth.UnitySynth _runtimeSynth;
 
-        public void RuntimeBind(Synth.UnitySynth synth)
+        public void BindToRuntime(Synth.UnitySynth synth)
         {
             _runtimeSynth = synth;
         }
 
-        public void ReBuildSynth()
+        public void RebuildSynth()
         {
             if (_runtimeSynth != null)
-                _runtimeSynth.ReBuildSynth();
+                _runtimeSynth.RebuildSynth();
         }
 
         [ContextMenu("Clean up preset object")]

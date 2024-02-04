@@ -21,7 +21,7 @@ namespace LooperAPP.AudioSystem
         public void NoteOn(NoteEvent noteEvent)
         {
             _currentNote = noteEvent.note;
-            _synth.queue_event(EventQueue.EventType.Note_on, noteEvent.note, noteEvent.data,
+            _synth.PlayScheduled(EventQueue.EventType.Note_on, noteEvent.note, noteEvent.data,
                 noteEvent.scheduledPlaytime);
             _isArmed = false;
             IsReady = false;
@@ -29,7 +29,7 @@ namespace LooperAPP.AudioSystem
 
         public  void NoteOff(double stopTime)
         {
-            _synth.queue_event(EventQueue.EventType.Note_off, _currentNote, 0, stopTime);
+            _synth.PlayScheduled(EventQueue.EventType.Note_off, _currentNote, 0, stopTime);
             _isArmed = true;
             IsReady = true;
         }

@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 
-namespace Synth
+namespace UnitySynth.Runtime.Synth
 {
     public class SynthControlBase : MonoBehaviour
     {

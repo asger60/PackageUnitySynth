@@ -1,10 +1,13 @@
+using UnityEngine;
+
 namespace UnitySynth.Runtime.Synth.Filter
 {
-    public abstract class AudioFilterBase
+    public abstract class AudioFilterBase : MonoBehaviour
     {
+        public SynthSettingsObjectFilter settings;
         public abstract void SetExpression(float data);
 
-
+        public abstract void SetSettings(SynthSettingsObjectFilter newSettings);
         
         public abstract void SetParameters(SynthSettingsObjectFilter settingsObjectFilter);
 

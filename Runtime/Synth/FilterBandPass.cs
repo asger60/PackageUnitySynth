@@ -7,11 +7,11 @@ namespace UnitySynth.Runtime.Synth
     {
         public FilterBandPass(float sampleRate)
         {
-            _sampleRate = sampleRate;
+            //_sampleRate = sampleRate;
             _q = 5;
         }
 
-        readonly float _sampleRate = 48000; // Sample rate
+        float _sampleRate = 44100; // Sample rate
 
         // // DSP variables
         private float _vF, _vD, _vZ1, _vZ2, _vZ3;
@@ -29,13 +29,26 @@ namespace UnitySynth.Runtime.Synth
             _q = q;
         }
 
+        public override void SetSettings(SynthSettingsObjectFilter newSettings)
+        {
+            Init(44100);
+            _q = 5;
+            settings = newSettings;
+        }
 
+
+        public void Init(int sampleRate)
+        {
+            _sampleRate = sampleRate;
+            _frequencyMod = 1;
+        }
         public override void SetExpression(float data)
         {
         }
 
         public override void SetParameters(SynthSettingsObjectFilter settingsObjectFilter)
         {
+            settings = settingsObjectFilter;
             SetFrequency(settingsObjectFilter.bandPassSettings.frequency);
             _q = settingsObjectFilter.bandPassSettings.bandWidth;
         }
@@ -45,17 +58,15 @@ namespace UnitySynth.Runtime.Synth
             _frequencyMod = mod1;
         }
 
-     
 
-
-        public override void process_mono_stride(float[] samples, int sample_count, int offset, int stride)
+        public override void process_mono_stride(float[] samples, int sampleCount, int offset, int stride)
         {
-            var f = 2 / 1.85f * Mathf.Sin(Mathf.PI * _filterFrequency / _sampleRate);
-            _vD = 1 / _q;
+            var f = 2f / 1.85f * Mathf.Sin(Mathf.PI * _filterFrequency / _sampleRate);
+            _vD = 1f / _q;
             _vF = (1.85f - 0.75f * _vD * f) * f;
 
             int idx = offset;
-            for (int i = 0; i < sample_count; ++i)
+            for (int i = 0; i < sampleCount; ++i)
             {
                 var si = samples[idx];
 
