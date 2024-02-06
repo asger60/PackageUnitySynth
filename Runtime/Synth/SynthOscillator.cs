@@ -104,7 +104,7 @@ namespace UnitySynth.Runtime.Synth
         public void SetNote(int note)
         {
             _currentNote = note + settings.tuning;
-            set_freq(global::UnitySynth.Runtime.Synth.UnitySynth.freqtab[_currentNote & 0x7f]);
+            set_freq(global::UnitySynth.Runtime.Synth.UnitySynth.FreqTab[_currentNote & 0x7f]);
         }
 
         public void SetPitchMod(float amount)

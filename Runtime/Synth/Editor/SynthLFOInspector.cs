@@ -15,14 +15,14 @@ namespace UnitySynth.Runtime.Synth.Editor
                 parent.DeleteElement<SynthSettingsObjectLFO>(settings, listName);
             }
 
-            EditorGUILayout.PrefixLabel("LFO", new GUIStyle {fontStyle = FontStyle.Bold});
+            EditorGUILayout.PrefixLabel("LFO", new GUIStyle { fontStyle = FontStyle.Bold });
             GUILayout.EndHorizontal();
 
             AnimationCurve curve = new AnimationCurve();
-            int count = Mathf.Min((int) Mathf.Abs(settings.frequency * 20), 100);
+            int count = Mathf.Min((int)Mathf.Abs(settings.frequency * 20), 100);
             for (int i = 0; i < count; i++)
             {
-                float t = i / (float) count;
+                float t = i / (float)count;
                 float fadeIn = Mathf.InverseLerp(0, settings.fadeInDuration, t);
                 curve.AddKey(t,
                     Mathf.Sin((t * 10) * settings.frequency) * settings.amp *
@@ -32,10 +32,9 @@ namespace UnitySynth.Runtime.Synth.Editor
 
             EditorGUILayout.CurveField(curve, Color.red, new Rect(0, -1, 1, 2), GUILayout.Height(60));
 
-            settings.amp = EditorGUILayout.FloatField("Amp", settings.amp);
-            settings.frequency = EditorGUILayout.FloatField("Frequency", settings.frequency);
-            settings.fadeInDuration =
-                Mathf.Clamp(EditorGUILayout.FloatField("Fade In Duration", settings.fadeInDuration), 0.001f, 100);
+            settings.amp = EditorGUILayout.Slider("Amp", settings.amp, .01f, 1);
+            settings.frequency = EditorGUILayout.Slider("Frequency", settings.frequency, 10, 1000);
+            settings.fadeInDuration = EditorGUILayout.Slider("Fade In Duration", settings.fadeInDuration, 0.001f, 15);
 
 
             GUILayout.Space(10);

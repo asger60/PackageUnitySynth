@@ -15,7 +15,7 @@ namespace Synth.Editor
                 parent.DeleteElement<SynthSettingsObjectEnvelope>(settings, listName);
             }
 
-            EditorGUILayout.PrefixLabel("Envelope", new GUIStyle {fontStyle = FontStyle.Bold});
+            EditorGUILayout.PrefixLabel("Envelope", new GUIStyle { fontStyle = FontStyle.Bold });
 
 
             EditorGUILayout.EndHorizontal();
@@ -42,11 +42,10 @@ namespace Synth.Editor
 
             EditorGUILayout.CurveField(curve, Color.yellow, new Rect(0, 0, curveLength, 1), GUILayout.Height(60));
 
-            settings.attack = EditorGUILayout.FloatField("Attack", settings.attack);
-            settings.decay = EditorGUILayout.FloatField("Decay", settings.decay);
-            settings.sustain =
-                Mathf.Clamp(EditorGUILayout.FloatField("Sustain", settings.sustain), 0.001f, 1);
-            settings.release = EditorGUILayout.FloatField("Release", settings.release);
+            settings.attack = EditorGUILayout.Slider("Attack", settings.attack, 0.01f, 5);
+            settings.decay = EditorGUILayout.Slider("Decay", settings.decay, 0.01f, 5);
+            settings.sustain = EditorGUILayout.Slider("Sustain", settings.sustain, 0.001f, 1);
+            settings.release = EditorGUILayout.Slider("Release", settings.release, 0.01f, 5);
 
 
             GUILayout.Space(10);

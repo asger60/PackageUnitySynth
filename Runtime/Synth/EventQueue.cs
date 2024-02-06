@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using UnitySynth.Runtime.AudioSystem;
 
 // empty     queue   queue     queue      pop
 // [ | | ]   [x| | ] [x|x| ]   [x|x|x]    [ |x|x]
@@ -37,25 +38,14 @@ public class EventQueue
     public struct QueuedEvent
     {
         public double eventTime;
-        public EventType eventType;
-        public List<int> notes;
-        public int data;
+        public NoteEvent NoteEvent;
 
-        public void Set(EventType type, int note, int data, double eventTime)
+        public void Set(NoteEvent noteEvent, double eventTime)
         {
-            this.eventType = type;
+            this.NoteEvent = noteEvent;
             this.eventTime = eventTime;
-            notes = new List<int> { note };
-            this.data = data;
         }
-
-        public void Set(EventType type, List<int> notes, int data, double eventTime)
-        {
-            this.eventType = type;
-            this.notes = notes;
-            this.eventTime = eventTime;
-            this.data = data;
-        }
+        
     }
 
     /// State
@@ -73,14 +63,14 @@ public class EventQueue
         this.capacity = capacity;
     }
 
-    public bool Enqueue(EventType type, int note, int data, double eventTime)
+    public bool Enqueue(NoteEvent noteEvent, double eventTime)
     {
         bool didEnqueue = false;
         lock (mutexLock)
         {
             if (size < capacity)
             {
-                events[back].Set(type, note, data, eventTime);
+                events[back].Set(noteEvent, eventTime);
                 back = (back + 1) % capacity;
                 size++;
                 didEnqueue = true;
@@ -90,22 +80,7 @@ public class EventQueue
         return didEnqueue;
     }
 
-    public bool Enqueue(EventType type, List<int> notes, int data, double eventTime)
-    {
-        bool didEnqueue = false;
-        lock (mutexLock)
-        {
-            if (size < capacity)
-            {
-                events[back].Set(type, notes, data, eventTime);
-                back = (back + 1) % capacity;
-                size++;
-                didEnqueue = true;
-            }
-        }
 
-        return didEnqueue;
-    }
 
     public void Dequeue()
     {

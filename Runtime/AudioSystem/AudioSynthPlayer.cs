@@ -8,7 +8,6 @@ namespace LooperAPP.AudioSystem
     public class AudioSynthPlayer : AudioPlayerBase
     {
         private UnitySynth.Runtime.Synth.UnitySynth _synth;
-        private int _currentNote;
         private UnitySynthPreset _settings;
         public UnitySynthPreset Settings => _settings;
 
@@ -20,16 +19,15 @@ namespace LooperAPP.AudioSystem
 
         public void NoteOn(NoteEvent noteEvent)
         {
-            _currentNote = noteEvent.note;
-            _synth.PlayScheduled(EventQueue.EventType.Note_on, noteEvent.note, noteEvent.data,
-                noteEvent.scheduledPlaytime);
+
+            _synth.PlayScheduled(noteEvent, noteEvent.scheduledPlaytime);
             _isArmed = false;
             IsReady = false;
         }
 
-        public  void NoteOff(double stopTime)
+        public void NoteOff(double stopTime)
         {
-            _synth.PlayScheduled(EventQueue.EventType.Note_off, _currentNote, 0, stopTime);
+            _synth.PlayScheduled(new NoteEvent(0, NoteEvent.EventTypes.NoteOff), stopTime);
             _isArmed = true;
             IsReady = true;
         }

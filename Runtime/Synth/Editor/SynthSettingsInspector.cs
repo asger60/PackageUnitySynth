@@ -11,14 +11,20 @@ namespace UnitySynth.Runtime.Synth.Editor
     public class SynthSettingsInspector : UnityEditor.Editor
     {
         private UnitySynthPreset _settingsObject;
-        private bool _showFilterMods;
-        private bool _showAmpMods;
-        private bool _showPitchMods;
-        private bool _showFilters;
+        private bool _showFilterMods => EditorPrefs.GetBool("Filter Modifiers");
+        private bool _showAmpMods => EditorPrefs.GetBool("Amplitude Modifiers");
+        private bool _showPitchMods => EditorPrefs.GetBool("Pitch Modifiers");
+        private bool _showFilters => EditorPrefs.GetBool("Filters");
+        private bool _showDevStuff => EditorPrefs.GetBool("Show Dev Stuff");
 
         public override void OnInspectorGUI()
         {
-            //DrawDefaultInspector();
+            EditorPrefs.SetBool("Show Dev Stuff", EditorGUILayout.Foldout(_showDevStuff, "Dev stuff"));
+            if (_showDevStuff)
+            {
+                DrawDefaultInspector();
+            }
+
             if (_settingsObject == null) _settingsObject = (UnitySynthPreset)this.target;
             if (_settingsObject == null) return;
             if (!_settingsObject.isInit)
@@ -27,6 +33,7 @@ namespace UnitySynth.Runtime.Synth.Editor
                 {
                     InitPreset();
                 }
+
                 return;
             }
 
@@ -52,7 +59,7 @@ namespace UnitySynth.Runtime.Synth.Editor
             }
 
             GUILayout.Space(10);
-            _showFilters = EditorGUILayout.Foldout(_showFilters, "Filters");
+            EditorPrefs.SetBool("Filters", EditorGUILayout.Foldout(_showFilters, "Filters"));
             if (_showFilters)
             {
                 foreach (var osc in _settingsObject.filterSettings)
@@ -71,7 +78,7 @@ namespace UnitySynth.Runtime.Synth.Editor
 
 
             GUILayout.Space(10);
-            _showPitchMods = EditorGUILayout.Foldout(_showPitchMods, "Pitch Modifiers");
+            EditorPrefs.SetBool("Pitch Modifiers", EditorGUILayout.Foldout(_showPitchMods, "Pitch Modifiers"));
             if (_showPitchMods)
             {
                 foreach (var ampMod in _settingsObject.pitchModifiers)
@@ -103,7 +110,7 @@ namespace UnitySynth.Runtime.Synth.Editor
 
 
             GUILayout.Space(10);
-            _showAmpMods = EditorGUILayout.Foldout(_showAmpMods, "Amplitude Modifiers");
+            EditorPrefs.SetBool("Amplitude Modifiers", EditorGUILayout.Foldout(_showAmpMods, "Amplitude Modifiers"));
             if (_showAmpMods)
             {
                 foreach (var ampMod in _settingsObject.amplitudeModifiers)
@@ -134,7 +141,7 @@ namespace UnitySynth.Runtime.Synth.Editor
             }
 
             GUILayout.Space(10);
-            _showFilterMods = EditorGUILayout.Foldout(_showFilterMods, "Filter Modifiers");
+            EditorPrefs.SetBool("Filter Modifiers", EditorGUILayout.Foldout(_showFilterMods, "Filter Modifiers"));
             if (_showFilterMods)
             {
                 EditorGUI.indentLevel = 1;
@@ -171,10 +178,10 @@ namespace UnitySynth.Runtime.Synth.Editor
         {
             SerializedProperty filterList = serializedObject.FindProperty(propertyName);
             var newEnvelope = _settingsObject.AddElement<SynthSettingsObjectEnvelope>(filterList, settingsName);
-            newEnvelope.attack = 1;
-            newEnvelope.decay = 1;
+            newEnvelope.attack = 0.1f;
+            newEnvelope.decay = 0.5f;
             newEnvelope.sustain = 0.5f;
-            newEnvelope.release = 1;
+            newEnvelope.release = 0.5f;
             serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(_settingsObject);
             _settingsObject.RebuildSynth();
@@ -233,6 +240,7 @@ namespace UnitySynth.Runtime.Synth.Editor
             synthSettings.RemoveElement<T>(filterList);
             serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(_settingsObject);
+            _settingsObject.CleanUpPreset();
         }
     }
 }

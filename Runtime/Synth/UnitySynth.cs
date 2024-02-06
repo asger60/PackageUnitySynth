@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Synth;
 using UnityEngine;
 using UnitySynth.Runtime.AudioSystem;
@@ -30,73 +31,53 @@ namespace UnitySynth.Runtime.Synth
     [RequireComponent(typeof(AudioSource))]
     public class UnitySynth : MonoBehaviour
     {
-        [Header("Voices")] public SynthOscillator[] oscillators;
+        private SynthOscillator[] _oscillators;
 
 
-        [Header("Pitch")] public bool unison;
-        public SynthControlBase[] voiceFrequencyModifiers;
+        public bool _unison;
+        private SynthControlBase[] _voiceFrequencyModifiers;
 
-        [Header("Amp")] public SynthControlBase[] amplitudeModifiers;
+        SynthControlBase[] amplitudeModifiers;
 
-        [Header("Filter")] public SynthControlBase[] filterModifiers;
+        private SynthControlBase[] _filterModifiers;
 
 
-        // Synth state
-        //private MoogFilter _filter1, _filter2;
+        private AudioFilterBase[] _filters;
 
-        //private FilterBandPass _filterBandPass1, _filterBandPass2;
-        //private FilterFormant _filterFormant1, _filterFormant2;
-        public AudioFilterBase[] filters;
-
-        //ADSR fenv;
-        //Phaser _pulseWidthLfo;
-        //Phaser fenv;
-
-        // when note_is_on = true, wait for current_delta samples and set note_is_playing = true
-        //bool note_is_playing;
-        bool is_initialized = false;
+        private bool _isInitialized = false;
 
         // Current MIDI evt
-        //bool note_is_on;
         private List<int> _notes = new List<int>();
-        int current_velocity;
+        private int _currentVelocity;
 
-        EventQueue queue;
+        private EventQueue _queue;
 
-        int sample_rate;
 
-        public static float[] freqtab;
-        float[] freqtabTest;
+        public static float[] FreqTab;
+        private float[] _freqTabTest;
 
         private const int QueueCapacity = 320;
-        private float[] lastBuffer = new float[2048];
-        private readonly object bufferMutex = new object();
-        private bool debugBufferEnabled = false;
+        private float[] _lastBuffer = new float[2048];
+        private readonly object _bufferMutex = new object();
+        private bool _debugBufferEnabled = false;
 
-        private EventQueue.QueuedEvent nextEvent;
-        private bool eventIsWaiting = false;
-        private UnitySynthPreset _preset;
+        private EventQueue.QueuedEvent _nextEvent;
+        private bool _eventIsWaiting = false;
+        [SerializeField] private UnitySynthPreset _preset;
 
         /// Public interface
-        public bool PlayScheduled(EventQueue.EventType evtType, int note, int data, double eventTime)
+        public bool PlayScheduled(NoteEvent noteEvent, double eventTime)
         {
             //queueLock = true;
-            bool result = queue.Enqueue(evtType, note, data, eventTime);
+            bool result = _queue.Enqueue(noteEvent, eventTime);
             //queueLock = false;
             return result;
         }
-
-        public bool PlayScheduled(EventQueue.EventType evtType, List<int> notes, int data, double eventTime)
-        {
-            //queueLock = true;
-            bool result = queue.Enqueue(evtType, notes, data, eventTime);
-            //queueLock = false;
-            return result;
-        }
+        
 
         public void ClearQueue()
         {
-            queue.Clear();
+            _queue.Clear();
         }
 
 
@@ -119,11 +100,11 @@ namespace UnitySynth.Runtime.Synth
                 Destroy(synthOscillator.gameObject);
             }
 
-            oscillators = new SynthOscillator[_preset.oscillatorSettings.Length];
-            voiceFrequencyModifiers = new SynthControlBase[_preset.pitchModifiers.Length];
+            _oscillators = new SynthOscillator[_preset.oscillatorSettings.Length];
+            _voiceFrequencyModifiers = new SynthControlBase[_preset.pitchModifiers.Length];
             amplitudeModifiers = new SynthControlBase[_preset.amplitudeModifiers.Length];
-            filterModifiers = new SynthControlBase[_preset.filterModifiers.Length];
-            filters = new AudioFilterBase[_preset.filterSettings.Length * 2];
+            _filterModifiers = new SynthControlBase[_preset.filterModifiers.Length];
+            _filters = new AudioFilterBase[_preset.filterSettings.Length * 2];
 
             for (int i = 0; i < _preset.oscillatorSettings.Length; i++)
             {
@@ -132,7 +113,7 @@ namespace UnitySynth.Runtime.Synth
                 modGO.transform.SetParent(transform);
                 var newOSC = modGO.AddComponent<SynthOscillator>();
                 newOSC.UpdateSettings(oscillatorSetting);
-                oscillators[i] = newOSC;
+                _oscillators[i] = newOSC;
             }
 
             for (int i = 0; i < _preset.filterSettings.Length; i++)
@@ -145,11 +126,11 @@ namespace UnitySynth.Runtime.Synth
                         modGO.transform.SetParent(transform);
                         var newFilter = modGO.AddComponent<FilterLowPass>();
                         newFilter.SetSettings(_preset.filterSettings[i]);
-                        filters[i * 2] = newFilter;
+                        _filters[i * 2] = newFilter;
 
                         var newFilter2 = modGO.AddComponent<FilterLowPass>();
                         newFilter2.SetSettings(_preset.filterSettings[i]);
-                        filters[(i * 2) + 1] = newFilter2;
+                        _filters[(i * 2) + 1] = newFilter2;
 
                         break;
                     case SynthSettingsObjectFilter.FilterTypes.BandPass:
@@ -158,11 +139,11 @@ namespace UnitySynth.Runtime.Synth
                         phFilterGO.transform.SetParent(transform);
                         var newHPFilter = phFilterGO.AddComponent<FilterBandPass>();
                         newHPFilter.SetSettings(_preset.filterSettings[i]);
-                        filters[i * 2] = newHPFilter;
+                        _filters[i * 2] = newHPFilter;
 
                         var newHPFilter2 = phFilterGO.AddComponent<FilterBandPass>();
                         newHPFilter2.SetSettings(_preset.filterSettings[i]);
-                        filters[(i * 2) + 1] = newHPFilter2;
+                        _filters[(i * 2) + 1] = newHPFilter2;
 
 
                         break;
@@ -172,11 +153,11 @@ namespace UnitySynth.Runtime.Synth
                         formantFilterGO.transform.SetParent(transform);
                         var newFormantFilter = formantFilterGO.AddComponent<FilterFormant>();
                         newFormantFilter.SetSettings(_preset.filterSettings[i]);
-                        filters[i * 2] = newFormantFilter;
+                        _filters[i * 2] = newFormantFilter;
 
                         var newFormantFilter2 = formantFilterGO.AddComponent<FilterFormant>();
                         newFormantFilter2.SetSettings(_preset.filterSettings[i]);
-                        filters[(i * 2) + 1] = newFormantFilter2;
+                        _filters[(i * 2) + 1] = newFormantFilter2;
 
                         break;
                     default:
@@ -198,7 +179,7 @@ namespace UnitySynth.Runtime.Synth
                         modGO.transform.SetParent(transform);
                         var newController = modGO.AddComponent<SynthControlLFO>();
                         newController.UpdateSettings(lfo);
-                        voiceFrequencyModifiers[i] = newController;
+                        _voiceFrequencyModifiers[i] = newController;
                         break;
                     }
                     case SynthSettingsObjectEnvelope envelope:
@@ -207,7 +188,7 @@ namespace UnitySynth.Runtime.Synth
                         modGO.transform.SetParent(transform);
                         var newController = modGO.AddComponent<SynthControlEnvelope>();
                         newController.UpdateSettings(envelope);
-                        voiceFrequencyModifiers[i] = newController;
+                        _voiceFrequencyModifiers[i] = newController;
                         break;
                     }
                 }
@@ -251,7 +232,7 @@ namespace UnitySynth.Runtime.Synth
                         modGO.transform.SetParent(transform);
                         var newController = modGO.AddComponent<SynthControlLFO>();
                         newController.UpdateSettings(lfo);
-                        filterModifiers[i] = newController;
+                        _filterModifiers[i] = newController;
                         break;
                     }
                     case SynthSettingsObjectEnvelope envelope:
@@ -260,28 +241,28 @@ namespace UnitySynth.Runtime.Synth
                         modGO.transform.SetParent(transform);
                         var newController = modGO.AddComponent<SynthControlEnvelope>();
                         newController.UpdateSettings(envelope);
-                        filterModifiers[i] = newController;
+                        _filterModifiers[i] = newController;
                         break;
                     }
                 }
             }
 
-            is_initialized = true;
+            _isInitialized = true;
         }
 
         // This should only be called from OnAudioFilterRead
         private void HandleEventNow(EventQueue.QueuedEvent currentEvent)
         {
-            if (currentEvent.eventType == EventQueue.EventType.Note_on)
+            if (currentEvent.NoteEvent._eventType == NoteEvent.EventTypes.NoteOn)
             {
-                foreach (var synthOscillator in oscillators)
+                foreach (var synthOscillator in _oscillators)
                 {
                     synthOscillator.ResetPhase();
                 }
 
 
-                _notes = currentEvent.notes;
-                update_params();
+                _notes = currentEvent.NoteEvent.notes.ToList();
+                UpdateParams();
 
 
                 foreach (var ampModifier in amplitudeModifiers)
@@ -289,12 +270,12 @@ namespace UnitySynth.Runtime.Synth
                     ampModifier.NoteOn();
                 }
 
-                foreach (var filterModifier in filterModifiers)
+                foreach (var filterModifier in _filterModifiers)
                 {
                     filterModifier.NoteOn();
                 }
 
-                foreach (var frequencyModifier in voiceFrequencyModifiers)
+                foreach (var frequencyModifier in _voiceFrequencyModifiers)
                 {
                     frequencyModifier.NoteOn();
                 }
@@ -306,7 +287,7 @@ namespace UnitySynth.Runtime.Synth
                     ampModifier.NoteOff();
                 }
 
-                foreach (var filterModifier in filterModifiers)
+                foreach (var filterModifier in _filterModifiers)
                 {
                     filterModifier.NoteOff();
                 }
@@ -317,72 +298,62 @@ namespace UnitySynth.Runtime.Synth
         /// Debug
         public void SetDebugBufferEnabled(bool enabled)
         {
-            this.debugBufferEnabled = enabled;
+            this._debugBufferEnabled = enabled;
         }
 
         public float[] GetLastBuffer()
         {
-            return lastBuffer;
+            return _lastBuffer;
         }
 
         public object GetBufferMutex()
         {
-            return bufferMutex;
+            return _bufferMutex;
         }
-
-        //public bool bufferLock = false;
-        //public bool queueLock = false;
 
         /// Unity
         private void Start()
         {
-            Init(1, AudioSettings.outputSampleRate);
+            Init();
         }
 
 
-        //private Int64 time_smp = 0;
-
         private void OnAudioFilterRead(float[] data, int channels)
         {
-            if (is_initialized)
+            if (_isInitialized)
             {
                 if (channels == 2)
                 {
                     int sampleFrames = data.Length / 2;
-                    render_float32_stereo_interleaved(data, sampleFrames);
+                    RenderFloat32StereoInterleaved(data, sampleFrames);
 
-                    if (debugBufferEnabled)
+                    if (_debugBufferEnabled)
                     {
-                        //bufferLock = true;
-                        lock (bufferMutex)
+                        lock (_bufferMutex)
                         {
-                            Array.Copy(data, lastBuffer, data.Length);
+                            Array.Copy(data, _lastBuffer, data.Length);
                         }
-                        //bufferLock = false;
                     }
                 }
             }
         }
 
         /// Internal
-        private void Init(int queue_length, int sample_rate)
+        private void Init()
         {
-            if (freqtab == null)
+            if (FreqTab == null)
             {
-                freqtabTest = new float[128];
-                freqtab = new float[128];
+                _freqTabTest = new float[128];
+                FreqTab = new float[128];
                 for (int i = 0; i < 128; i++)
                 {
                     // 128 midi notes
-                    freqtab[i] = midi2freq(i);
-                    freqtabTest[i] = midi2freq(i);
+                    FreqTab[i] = midi2freq(i);
+                    _freqTabTest[i] = midi2freq(i);
                 }
             }
 
-            this.sample_rate = sample_rate;
-
-
-            queue = new EventQueue(QueueCapacity);
+            _queue = new EventQueue(QueueCapacity);
             _notes = new List<int> { 0 };
 
             Reset();
@@ -390,17 +361,17 @@ namespace UnitySynth.Runtime.Synth
 
         private void Reset()
         {
-            foreach (var synthOscillator in oscillators)
+            foreach (var synthOscillator in _oscillators)
             {
                 synthOscillator.ResetPhase();
             }
         }
 
 
-        private void update_params()
+        private void UpdateParams()
         {
             // Set synth params
-            foreach (var frequencyModifier in voiceFrequencyModifiers)
+            foreach (var frequencyModifier in _voiceFrequencyModifiers)
             {
                 frequencyModifier.DoUpdate();
             }
@@ -410,94 +381,67 @@ namespace UnitySynth.Runtime.Synth
                 amplitudeModifier.DoUpdate();
             }
 
-            foreach (var filterModifier in filterModifiers)
+            foreach (var filterModifier in _filterModifiers)
             {
                 filterModifier.DoUpdate();
             }
 
             float voiceFreq = 1;
-            foreach (var frequencyModifier in voiceFrequencyModifiers)
+            foreach (var frequencyModifier in _voiceFrequencyModifiers)
             {
                 voiceFreq *= frequencyModifier.Process();
             }
-            //_osc1.set_freq(freq * voiceFreqMod, sample_rate);
-            //_subOsc.set_freq(freq * 0.5f * voiceFreqMod, sample_rate);
 
-
-            if (unison)
+            if (_unison)
             {
-                for (int i = 0; i < oscillators.Length; i++)
+                for (int i = 0; i < _oscillators.Length; i++)
                 {
-                    oscillators[i].SetNote(_notes[0]);
-                    oscillators[i].SetPitchMod(voiceFreq);
+                    _oscillators[i].SetNote(_notes[0]);
+                    _oscillators[i].SetPitchMod(voiceFreq);
                 }
-                //_osc2.set_freq(freq * voiceFreqMod * Mathf.LerpUnclamped(1, 1.01f, voiceSpread), sample_rate);
-                //_osc3.set_freq(freq * voiceFreqMod * Mathf.LerpUnclamped(1, .99f, voiceSpread), sample_rate);
-                //_osc4.set_freq(freq * voiceFreqMod * Mathf.LerpUnclamped(1, 1.005f, voiceSpread), sample_rate);
             }
             else
             {
-                for (int i = 0; i < oscillators.Length; i++)
+                for (int i = 0; i < _oscillators.Length; i++)
                 {
                     int currentNote = (int)Mathf.Repeat(i, _notes.Count);
-                    //  oscillators[i].SetNote(_notes[currentNote]);
-                    oscillators[i].SetNote(_notes[currentNote]);
-                    oscillators[i].SetPitchMod(voiceFreq);
+                    _oscillators[i].SetNote(_notes[currentNote]);
+                    _oscillators[i].SetPitchMod(voiceFreq);
                 }
             }
 
-            //fenv.set_freq(1.0f / filterEnvDecay, sample_rate);
-            //_pulseWidthLfo.set_freq(_preset.pwmFrequency * 2.3f, sample_rate);
 
-            //float env01 = fenv.quad_down01();
+            //float cutOffFreq = _preset.filterSettings[0].lowPassSettings.cutoffFrequency;
+//
+            //foreach (var filterModifier in _filterModifiers)
+            //{
+            //    cutOffFreq *= filterModifier.Process();
+            //}
 
-
-            //_filterFormant1.SetVowel(_preset.vowel);
-            //_filterFormant2.SetVowel(_preset.vowel);
-
-
-            float cutOffFreq = _preset.filterSettings[0].lowPassSettings.cutoffFrequency;
-
-            foreach (var filterModifier in filterModifiers)
+            for (var i = 0; i < _filters.Length; i++)
             {
-                cutOffFreq *= filterModifier.Process();
-            }
-
-            for (var i = 0; i < filters.Length; i++)
-            {
-                var audioFilterBase = filters[i];
+                var audioFilterBase = _filters[i];
                 audioFilterBase.SetParameters(_preset.filterSettings[i / 2]);
                 audioFilterBase.SetExpression(0);
             }
-
-            //_filter1.SetCutoff(cutOffFreq); // 0 Hz cutoff is bad
-            //_filter2.SetCutoff(cutOffFreq);
-//
-            //_filterBandPass1.SetFrequency(cutOffFreq);
-            //_filterBandPass2.SetFrequency(cutOffFreq);
-//
-//
-            //_filter1.SetOversampling(_preset.oversampling);
-            //_filter2.SetOversampling(_preset.oversampling);
         }
 
-        private void render_float32_stereo_interleaved(float[] buffer, int sample_frames)
+        private void RenderFloat32StereoInterleaved(float[] buffer, int sampleFrames)
         {
-            if (!is_initialized) return;
+            if (!_isInitialized) return;
 
             int smp = 0;
-            int buf_idx = 0;
-            //int time_smp = masterClock_smp;
+            int bufferIndex = 0;
 
-            update_params();
+            UpdateParams();
 
             // Cache this for the entire buffer, we don't need to check for
             // every sample if new events have been enqueued.
             // This assumes that no other metdods call GetFrontAndDequeue.
-            int queueSize = queue.GetSize();
+            int queueSize = _queue.GetSize();
 
             // Render loop
-            for (; smp < sample_frames; ++smp)
+            for (; smp < sampleFrames; ++smp)
             {
                 // Event handling
                 // This is sample accurate event handling.
@@ -505,24 +449,24 @@ namespace UnitySynth.Runtime.Synth
                 // move this code outside the loop.
                 while (true)
                 {
-                    if (eventIsWaiting == false && queueSize > 0)
+                    if (_eventIsWaiting == false && queueSize > 0)
                     {
                         //queueLock = true;
-                        if (queue.GetFrontAndDequeue(ref nextEvent))
+                        if (_queue.GetFrontAndDequeue(ref _nextEvent))
                         {
-                            eventIsWaiting = true;
+                            _eventIsWaiting = true;
                             queueSize--;
                         }
                         //queueLock = false;
                     }
 
-                    if (eventIsWaiting)
+                    if (_eventIsWaiting)
                     {
                         //if (nextEvent.time_smp <= time_smp)
-                        if (nextEvent.eventTime <= AudioSettings.dspTime)
+                        if (_nextEvent.eventTime <= AudioSettings.dspTime)
                         {
-                            HandleEventNow(nextEvent);
-                            eventIsWaiting = false;
+                            HandleEventNow(_nextEvent);
+                            _eventIsWaiting = false;
                         }
                         else
                         {
@@ -538,7 +482,7 @@ namespace UnitySynth.Runtime.Synth
                     }
                 }
 
-                foreach (var frequencyModifier in voiceFrequencyModifiers)
+                foreach (var frequencyModifier in _voiceFrequencyModifiers)
                 {
                     frequencyModifier.DoUpdate();
                 }
@@ -548,14 +492,11 @@ namespace UnitySynth.Runtime.Synth
                     amplitudeModifier.DoUpdate();
                 }
 
-                foreach (var filterModifier in filterModifiers)
+                foreach (var filterModifier in _filterModifiers)
                 {
                     filterModifier.DoUpdate();
                 }
 
-
-                // Rendering
-                //if (note_is_on)
 
                 // Render sample
                 float ampMod = 1;
@@ -564,40 +505,33 @@ namespace UnitySynth.Runtime.Synth
                     ampMod *= ampModifier.Process();
                 }
 
-                //ampMod /= (float)amplitudeModifiers.Length;
                 ampMod /= 2f;
 
                 float oscillatorOutput = 0;
-                foreach (var synthOscillator in oscillators)
+                foreach (var synthOscillator in _oscillators)
                 {
                     oscillatorOutput += synthOscillator.Process();
                 }
 
-                oscillatorOutput /= oscillators.Length;
+                oscillatorOutput /= _oscillators.Length;
 
 
                 float sample = oscillatorOutput * ampMod;
 
-                buffer[buf_idx++] = sample;
-                buffer[buf_idx++] = sample;
+                buffer[bufferIndex++] = sample;
+                buffer[bufferIndex++] = sample;
 
                 // Update oscillators
-                foreach (var synthOscillator in oscillators)
+                foreach (var synthOscillator in _oscillators)
                 {
                     synthOscillator.DoUpdate();
                 }
 
 
-                //float cutOffFreq = _preset.cutoffFrequency /* * fenv.Process() * (filterCutOffModifier.Process())*/;
-                foreach (var filterModifier in filterModifiers)
-                {
-                    //cutOffFreq *= filterModifier.Process();
-                }
-
-                foreach (var audioFilterBase in filters)
+                foreach (var audioFilterBase in _filters)
                 {
                     float currentMod = 1;
-                    foreach (var filterModifier in filterModifiers)
+                    foreach (var filterModifier in _filterModifiers)
                     {
                         currentMod *= filterModifier.Process();
                     }
@@ -608,11 +542,11 @@ namespace UnitySynth.Runtime.Synth
 
 
             // Filter entire buffer
-            for (var i = 0; i < filters.Length; i++)
+            for (var i = 0; i < _filters.Length; i++)
             {
-                var audioFilterBase = filters[i];
+                var audioFilterBase = _filters[i];
                 audioFilterBase.SetParameters(_preset.filterSettings[i / 2]);
-                audioFilterBase.process_mono_stride(buffer, sample_frames, i % 2, 2);
+                audioFilterBase.process_mono_stride(buffer, sampleFrames, i % 2, 2);
             }
         }
 

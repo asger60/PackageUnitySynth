@@ -19,7 +19,7 @@ namespace UnitySynth.Runtime.AudioSystem.Editor
             string scriptableObjectPath = AssetDatabase.GetAssetPath(scriptableObject);
 
             AssetDatabase.AddObjectToAsset(element, scriptableObjectPath);
-            AssetDatabase.SaveAssets();
+            //
 
 
             listProperty.InsertArrayElementAtIndex(listProperty.arraySize);
