@@ -424,7 +424,6 @@ namespace UnitySynth.Runtime.Synth
             int smp = 0;
             int bufferIndex = 0;
 
-            //UpdateParams();
 
             // Cache this for the entire buffer, we don't need to check for
             // every sample if new events have been enqueued.
