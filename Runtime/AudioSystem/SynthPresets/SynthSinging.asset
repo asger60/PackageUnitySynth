@@ -33,16 +33,16 @@ MonoBehaviour:
   isInit: 1
   showOscillator: 1
   unison: 0
-  voices: 3
-  voiceSpread: 0
+  voices: 5
+  voiceSpread: 0.11
   oscillatorSettings:
   - {fileID: 7051489932187159931}
   - {fileID: -5077465338326500143}
   filterSettings:
   - {fileID: 8319889106097448734}
   pitchModifiers:
-  - {fileID: 0}
   - {fileID: 2783163987714969242}
+  - {fileID: 6000400212989600104}
   amplitudeModifiers:
   - {fileID: 2718245307667913081}
   filterModifiers: []
@@ -59,9 +59,9 @@ MonoBehaviour:
   m_Name: Amplitude Envelope
   m_EditorClassIdentifier: 
   attack: 0.04
-  decay: 0.01
-  sustain: 1
-  release: 0.19
+  decay: 0.37
+  sustain: 0.746
+  release: 0.51
 --- !u!114 &2783163987714969242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,8 +75,24 @@ MonoBehaviour:
   m_Name: Pitch LFO
   m_EditorClassIdentifier: 
   amp: 0.121
-  frequency: 10
+  frequency: 7.9
   fadeInDuration: 1.75
+--- !u!114 &6000400212989600104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Pitch Envelope
+  m_EditorClassIdentifier: 
+  attack: 0.1
+  decay: 0.5
+  sustain: 1
+  release: 5
 --- !u!114 &7051489932187159931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,4 +132,4 @@ MonoBehaviour:
     frequency: 1154
     bandWidth: 37.9
   formantSettings:
-    vowel: 3
+    vowel: 2

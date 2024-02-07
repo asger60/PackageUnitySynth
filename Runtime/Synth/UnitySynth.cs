@@ -524,10 +524,10 @@ namespace UnitySynth.Runtime.Synth
 
                 float sample = oscillatorOutput * ampMod;
                 // Filter entire buffer
-                //for (var i = 0; i < _filters.Length; i++)
+                for (var i = 0; i < _filters.Length; i++)
                 {
-                    var audioFilterBase = _filters[0];
-                    audioFilterBase.SetParameters(_preset.filterSettings[0]);
+                    var audioFilterBase = _filters[i];
+                    audioFilterBase.SetParameters(_preset.filterSettings[i]);
                     sample = audioFilterBase.Process(sample);
                 }
 
