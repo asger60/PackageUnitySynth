@@ -17,5 +17,10 @@ namespace UnitySynth.Runtime.Synth.Filter
         public virtual void process_mono_stride(float[] samples, int sample_count, int offset, int stride)
         {
         }
+
+        public virtual float Process(float sample)
+        {
+            return sample;
+        }
     }
 }

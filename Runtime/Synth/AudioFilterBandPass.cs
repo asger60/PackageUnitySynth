@@ -3,9 +3,9 @@ using UnitySynth.Runtime.Synth.Filter;
 
 namespace UnitySynth.Runtime.Synth
 {
-    public class FilterBandPass : AudioFilterBase
+    public class AudioFilterBandPass : AudioFilterBase
     {
-        public FilterBandPass(float sampleRate)
+        public AudioFilterBandPass(float sampleRate)
         {
             //_sampleRate = sampleRate;
             _q = 5;
@@ -42,6 +42,7 @@ namespace UnitySynth.Runtime.Synth
             _sampleRate = sampleRate;
             _frequencyMod = 1;
         }
+
         public override void SetExpression(float data)
         {
         }
@@ -80,6 +81,25 @@ namespace UnitySynth.Runtime.Synth
 
                 idx += stride;
             }
+        }
+
+        public override float Process(float sample)
+        {
+            var f = 2f / 1.85f * Mathf.Sin(Mathf.PI * _filterFrequency / _sampleRate);
+            _vD = 1f / _q;
+            _vF = (1.85f - 0.75f * _vD * f) * f;
+            
+
+            var _vZ1 = 0.5f * sample;
+            var _vZ3 = this._vZ2 * _vF + this._vZ3;
+            var _vZ2 = (_vZ1 + this._vZ1 - _vZ3 - this._vZ2 * _vD) * _vF + this._vZ2;
+            
+            sample = _vZ2;
+            this._vZ1 = _vZ1;
+            this._vZ2 = _vZ2;
+            this._vZ3 = _vZ3;
+
+            return sample;
         }
     }
 }

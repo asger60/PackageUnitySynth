@@ -93,34 +93,37 @@ using static System.Math;
 
 namespace UnitySynth.Runtime.Synth
 {
-    public class FilterLowPass : AudioFilterBase
+    public class AudioFilterLowPass : AudioFilterBase
     {
         /// Static config
         const float C = 1.0f; // ????
+
         const float V_t = 1.22070313f; // From Diakopoulos
 
         /// Config
         float reso, Fs;
+
         int oversampling = 1; // 1 means don't oversample
 
         /// State
         double y_a, y_b, y_c, y_d;
+
         double w_a, w_b, w_c;
 
         /// Cache
         double s, v;
+
         float cutoff;
 
-        public FilterLowPass(float sampleRate)
+        public AudioFilterLowPass(float sampleRate)
         {
             Fs = sampleRate;
             v = V_t * 0.5f; // 1/2V_t
         }
-        
+
 
         public override void SetExpression(float data)
         {
-            
         }
 
         public override void SetParameters(SynthSettingsObjectFilter settingsObjectFilter)
@@ -132,6 +135,7 @@ namespace UnitySynth.Runtime.Synth
         }
 
         private float _cutoffMod = 1;
+
         public override void HandleModifiers(float mod1)
         {
             _cutoffMod = mod1;
@@ -153,20 +157,43 @@ namespace UnitySynth.Runtime.Synth
                 for (int j = 0; j < oversampling; ++j)
                 {
                     y_a += s * (Tanh(x - 4 * reso * y_d * v) - w_a);
-                    w_a = Tanh(y_a * v); y_b += s * (w_a - w_b);
-                    w_b = Tanh(y_b * v); y_c += s * (w_b - w_c);
-                    w_c = Tanh(y_c * v); y_d += s * (w_c - Tanh(y_d * v));
+                    w_a = Tanh(y_a * v);
+                    y_b += s * (w_a - w_b);
+                    w_b = Tanh(y_b * v);
+                    y_c += s * (w_b - w_c);
+                    w_c = Tanh(y_c * v);
+                    y_d += s * (w_c - Tanh(y_d * v));
                 }
+
                 samples[idx] = (float)y_d; // y_d = output sample
                 idx += stride;
             }
         }
 
 
+        public override float Process(float sample)
+        {
+            float x = sample; // x = input sample
+            for (int j = 0; j < oversampling; ++j)
+            {
+                y_a += s * (Tanh(x - 4 * reso * y_d * v) - w_a);
+                w_a = Tanh(y_a * v);
+                y_b += s * (w_a - w_b);
+                w_b = Tanh(y_b * v);
+                y_c += s * (w_b - w_c);
+                w_c = Tanh(y_c * v);
+                y_d += s * (w_c - Tanh(y_d * v));
+            }
+
+            return (float)y_d; // y_d = output sample
+            //idx += stride;
+        }
+
+
         private void SetCutoff(float c)
         {
             cutoff = c;
-            s = c / C / Fs / oversampling * 6.28318530717959f * _cutoffMod; 
+            s = c / C / Fs / oversampling * 6.28318530717959f * _cutoffMod;
         }
 
         public void SetOversampling(int iterationCount)

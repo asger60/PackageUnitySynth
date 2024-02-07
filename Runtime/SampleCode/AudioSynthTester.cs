@@ -34,11 +34,11 @@ public class AudioSynthTester : MonoBehaviour
             int expression = Random.Range(0, 5);
             faceExpression.SetExpression(expression);
             faceExpression.SetNote(note);
-            int[] notes = new int[3];
+            int[] notes = new int[5];
             notes[0] = note;
             for (var i = 1; i < notes.Length; i++)
             {
-                notes[i] = note + Conductor.instance.GetScaledNote(Random.Range(2, 4));
+                notes[i] = note + Conductor.instance.GetScaledNote(Random.Range(2, 6));
             }
 
 

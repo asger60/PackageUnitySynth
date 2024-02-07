@@ -3,11 +3,11 @@ using UnitySynth.Runtime.Synth.Filter;
 
 namespace UnitySynth.Runtime.Synth
 {
-    public class FilterFormant : AudioFilterBase
+    public class AudioFilterFormant : AudioFilterBase
     {
-        private FilterBandPass _filterBandPass1;
-        private FilterBandPass _filterBandPass2;
-        private FilterBandPass _filterBandPass3;
+        private AudioFilterBandPass _audioFilterBandPass1;
+        private AudioFilterBandPass _audioFilterBandPass2;
+        private AudioFilterBandPass _audioFilterBandPass3;
 
         struct FormantBand
         {
@@ -130,35 +130,35 @@ namespace UnitySynth.Runtime.Synth
         {
             _sampleRate = sampleRate;
 
-            _filterBandPass1 = gameObject.AddComponent<FilterBandPass>();
-            _filterBandPass2 = gameObject.AddComponent<FilterBandPass>();
-            _filterBandPass3 = gameObject.AddComponent<FilterBandPass>();
+            _audioFilterBandPass1 = gameObject.AddComponent<AudioFilterBandPass>();
+            _audioFilterBandPass2 = gameObject.AddComponent<AudioFilterBandPass>();
+            _audioFilterBandPass3 = gameObject.AddComponent<AudioFilterBandPass>();
             _currentVowel = _vowels[3];
 
-            _filterBandPass1.Init(sampleRate);
-            _filterBandPass2.Init(sampleRate);
-            _filterBandPass3.Init(sampleRate);
-            
+            _audioFilterBandPass1.Init(sampleRate);
+            _audioFilterBandPass2.Init(sampleRate);
+            _audioFilterBandPass3.Init(sampleRate);
 
-            _filterBandPass1.SetFrequency(_currentVowel.GetBand(0).frequency);
-            _filterBandPass1.SetQ(_currentVowel.GetBand(0).q);
 
-            _filterBandPass2.SetFrequency(_currentVowel.GetBand(1).frequency);
-            _filterBandPass2.SetQ(_currentVowel.GetBand(1).q);
+            _audioFilterBandPass1.SetFrequency(_currentVowel.GetBand(0).frequency);
+            _audioFilterBandPass1.SetQ(_currentVowel.GetBand(0).q);
 
-            _filterBandPass3.SetFrequency(_currentVowel.GetBand(2).frequency);
-            _filterBandPass3.SetQ(_currentVowel.GetBand(2).q);
+            _audioFilterBandPass2.SetFrequency(_currentVowel.GetBand(1).frequency);
+            _audioFilterBandPass2.SetQ(_currentVowel.GetBand(1).q);
+
+            _audioFilterBandPass3.SetFrequency(_currentVowel.GetBand(2).frequency);
+            _audioFilterBandPass3.SetQ(_currentVowel.GetBand(2).q);
         }
 
         private void SetVowel(int index)
         {
             _currentVowel = _vowels[index];
-            _filterBandPass1.SetFrequency(_currentVowel.GetBand(0).frequency);
-            _filterBandPass1.SetQ(_currentVowel.GetBand(0).q);
-            _filterBandPass2.SetFrequency(_currentVowel.GetBand(1).frequency);
-            _filterBandPass2.SetQ(_currentVowel.GetBand(1).q);
-            _filterBandPass3.SetFrequency(_currentVowel.GetBand(2).frequency);
-            _filterBandPass3.SetQ(_currentVowel.GetBand(2).q);
+            _audioFilterBandPass1.SetFrequency(_currentVowel.GetBand(0).frequency);
+            _audioFilterBandPass1.SetQ(_currentVowel.GetBand(0).q);
+            _audioFilterBandPass2.SetFrequency(_currentVowel.GetBand(1).frequency);
+            _audioFilterBandPass2.SetQ(_currentVowel.GetBand(1).q);
+            _audioFilterBandPass3.SetFrequency(_currentVowel.GetBand(2).frequency);
+            _audioFilterBandPass3.SetQ(_currentVowel.GetBand(2).q);
         }
 
         float _sampleRate = 48000; // Sample rate
@@ -187,9 +187,9 @@ namespace UnitySynth.Runtime.Synth
             samples.CopyTo(mix3, 0);
 
 
-            _filterBandPass1.process_mono_stride(mix1, sampleCount, offset, stride);
-            _filterBandPass2.process_mono_stride(mix2, sampleCount, offset, stride);
-            _filterBandPass3.process_mono_stride(mix3, sampleCount, offset, stride);
+            _audioFilterBandPass1.process_mono_stride(mix1, sampleCount, offset, stride);
+            _audioFilterBandPass2.process_mono_stride(mix2, sampleCount, offset, stride);
+            _audioFilterBandPass3.process_mono_stride(mix3, sampleCount, offset, stride);
 
             int idx = offset;
             for (int i = 0; i < sampleCount; ++i)
@@ -200,6 +200,31 @@ namespace UnitySynth.Runtime.Synth
                                / 3f;
                 idx += stride;
             }
+        }
+
+        public override float Process(float sample)
+        {
+            //float mix1 = sample;
+            //float mix2 = sample;
+            //float mix3 = sample;
+            //samples.CopyTo(mix1, 0);
+            //samples.CopyTo(mix2, 0);
+            //samples.CopyTo(mix3, 0);
+
+
+            float mix1 = _audioFilterBandPass1.Process(sample);
+            float mix2 = _audioFilterBandPass2.Process(sample);
+            float mix3 = _audioFilterBandPass3.Process(sample);
+
+            //int idx = offset;
+            //for (int i = 0; i < sampleCount; ++i)
+
+            sample = ((mix1 * _currentVowel.GetBand(0).gain) +
+                      (mix2 * _currentVowel.GetBand(1).gain) +
+                      (mix3 * _currentVowel.GetBand(2).gain)) / 3f;
+            //  idx += stride;
+
+            return sample;
         }
     }
 }

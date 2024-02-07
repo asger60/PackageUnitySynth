@@ -15,41 +15,57 @@ namespace UnitySynth.Runtime.Synth
         private float _amp = 1.0f;
         private UInt32 _freqPhPSmp = 0u;
         private float _pitchModAmount;
+        private float _fineTune;
+        
 
         private int _currentNote;
 
 
-        private int waveTableSize = 128;
+        private readonly int _waveTableSize = 128;
         private float[] _sine8Bit;
         private float[] _square8Bit;
         private float[] _saw8Bit;
         private float[] _noiseWhite;
 
         public SynthSettingsObjectOscillator settings;
-
+        private bool _isActive;
+        public bool IsActive => _isActive;
         private void Start()
         {
-            _sine8Bit = new float[waveTableSize];
-            _saw8Bit = new float[waveTableSize];
-            _square8Bit = new float[2];
-            for (int i = 0; i < waveTableSize; ++i)
+            _isActive = true;
+            switch (settings.oscillatorType)
             {
-                float angle01 = ((float) i) / waveTableSize;
-                _sine8Bit[i] = Mathf.Round(Mathf.Sin(angle01 * 2 * Mathf.PI) * 128) / 128;
-            }
+                case SynthSettingsObjectOscillator.OscillatorType.Simple:
+                    break;
+                case SynthSettingsObjectOscillator.OscillatorType.WaveTable:
+                    _sine8Bit = new float[_waveTableSize];
+                    _saw8Bit = new float[_waveTableSize];
+                    _square8Bit = new float[2];
+                    for (int i = 0; i < _waveTableSize; ++i)
+                    {
+                        float angle01 = ((float)i) / _waveTableSize;
+                        _sine8Bit[i] = Mathf.Round(Mathf.Sin(angle01 * 2 * Mathf.PI) * 128) / 128;
+                    }
 
-            for (int i = 0; i < waveTableSize; ++i)
-            {
-                _saw8Bit[i] = Mathf.Lerp(-1, 1, (float) i / waveTableSize);
-            }
+                    for (int i = 0; i < _waveTableSize; ++i)
+                    {
+                        _saw8Bit[i] = Mathf.Lerp(-1, 1, (float)i / _waveTableSize);
+                    }
 
-            _square8Bit[0] = -1;
-            _square8Bit[1] = 1;
+                    _square8Bit[0] = -1;
+                    _square8Bit[1] = 1;
+                    break;
+                case SynthSettingsObjectOscillator.OscillatorType.Noise:
 
-            _noiseWhite = new float[8192];
-            for (int i = 0; i < _noiseWhite.Length; ++i)
-            {
-                _noiseWhite[i] = Random.Range(-1f, 1f);
+                    _noiseWhite = new float[16384];
+                    for (int i = 0; i < _noiseWhite.Length; ++i)
+                    {
+                        _noiseWhite[i] = Random.Range(-1f, 1f);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -57,7 +73,7 @@ namespace UnitySynth.Runtime.Synth
         {
             _phase = 0u;
         }
- 
+
         public void DoUpdate()
         {
             _phase += _freqPhPSmp;
@@ -66,6 +82,7 @@ namespace UnitySynth.Runtime.Synth
 
         public float Process()
         {
+            if (!_isActive) return 0;
             switch (settings.oscillatorType)
             {
                 case SynthSettingsObjectOscillator.OscillatorType.Simple:
@@ -103,6 +120,7 @@ namespace UnitySynth.Runtime.Synth
 
         public void SetNote(int note)
         {
+            _isActive = true;
             _currentNote = note + settings.tuning;
             set_freq(UnitySynth.FreqTab[_currentNote & 0x7f]);
         }
@@ -110,6 +128,12 @@ namespace UnitySynth.Runtime.Synth
         public void SetPitchMod(float amount)
         {
             _pitchModAmount = Remap(amount, -1, 1, 0.5f, 2);
+            set_freq(UnitySynth.FreqTab[_currentNote & 0x7f]);
+        }
+        
+        public void SetFineTuning(float amount)
+        {
+            _fineTune = amount;
             set_freq(UnitySynth.FreqTab[_currentNote & 0x7f]);
         }
 
@@ -121,8 +145,8 @@ namespace UnitySynth.Runtime.Synth
 
         private void set_freq(float freq__hz, int sample_rate = 48000)
         {
-            float freq__ppsmp = (freq__hz * _pitchModAmount) / sample_rate; // periods per sample
-            _freqPhPSmp = (uint) (freq__ppsmp * PHASE_MAX);
+            float freq__ppsmp = ((freq__hz * _pitchModAmount) + _fineTune) / sample_rate; // periods per sample
+            _freqPhPSmp = (uint)(freq__ppsmp * PHASE_MAX);
         }
 
         /// Basic oscillators
@@ -198,6 +222,7 @@ namespace UnitySynth.Runtime.Synth
                 t /= dt;
                 return t + t - t * t - 1.0f;
             }
+
             // t^2/2 +t +1/2
             // -1 <= t <= 0
             // discontinuities between -1 & 0
@@ -206,6 +231,7 @@ namespace UnitySynth.Runtime.Synth
                 t = (t - 1.0f) / dt;
                 return t * t + t + t + 1.0f;
             }
+
             return 0.0f;
         }
 
@@ -216,11 +242,11 @@ namespace UnitySynth.Runtime.Synth
             switch (settings.waveTableOscillatorType)
             {
                 case SynthSettingsObjectOscillator.WaveTableOscillatorTypes.Sine8Bit:
-                    return _sine8Bit[(int) (ph01 * _sine8Bit.Length)];
+                    return _sine8Bit[(int)(ph01 * _sine8Bit.Length)];
                 case SynthSettingsObjectOscillator.WaveTableOscillatorTypes.Saw8Bit:
-                    return _saw8Bit[(int) (ph01 * _saw8Bit.Length)];
+                    return _saw8Bit[(int)(ph01 * _saw8Bit.Length)];
                 case SynthSettingsObjectOscillator.WaveTableOscillatorTypes.Square8Bit:
-                    return _square8Bit[(int) (ph01 * _square8Bit.Length)];
+                    return _square8Bit[(int)(ph01 * _square8Bit.Length)];
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -229,12 +255,17 @@ namespace UnitySynth.Runtime.Synth
         float Noise()
         {
             float ph01 = _phase / PHASE_MAX;
-            return _noiseWhite[(int) (ph01 * _noiseWhite.Length)];
+            return _noiseWhite[(int)(ph01 * _noiseWhite.Length)];
         }
 
-        public void UpdateSettings(SynthSettingsObjectOscillator settings)
+        public void UpdateSettings(SynthSettingsObjectOscillator newSettings)
         {
-            this.settings = settings;
+            this.settings = newSettings;
+        }
+
+        public void SetInactive()
+        {
+            _isActive = false;
         }
     }
 }

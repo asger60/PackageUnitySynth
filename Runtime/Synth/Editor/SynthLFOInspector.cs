@@ -33,7 +33,7 @@ namespace UnitySynth.Runtime.Synth.Editor
             EditorGUILayout.CurveField(curve, Color.red, new Rect(0, -1, 1, 2), GUILayout.Height(60));
 
             settings.amp = EditorGUILayout.Slider("Amp", settings.amp, .01f, 1);
-            settings.frequency = EditorGUILayout.Slider("Frequency", settings.frequency, 1, 256);
+            settings.frequency = EditorGUILayout.Slider("Frequency", settings.frequency, 0.1f, 100);
             settings.fadeInDuration = EditorGUILayout.Slider("Fade In Duration", settings.fadeInDuration, 0.001f, 15);
 
 
