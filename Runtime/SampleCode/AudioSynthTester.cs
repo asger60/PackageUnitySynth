@@ -1,3 +1,4 @@
+using System.Collections;
 using LooperAPP.AudioSystem;
 using Rytmos.AudioSystem;
 using UnityEngine;
@@ -21,7 +22,7 @@ public class AudioSynthTester : MonoBehaviour
         _audioSynthPlayer.Init();
         _audioSynthPlayer.SetPreset(preset);
         Metronome.Instance.SetActive(true);
-        Metronome.Instance.OnTick4 += OnTick4;
+        Metronome.Instance.OnTick2 += OnTick4;
     }
 
     private void OnTick4()
@@ -29,7 +30,7 @@ public class AudioSynthTester : MonoBehaviour
         if (!_isPlaying)
         {
             _isPlaying = true;
-            int note = Conductor.instance.GetScaledNote(Random.Range(20, 30));
+            int note = Conductor.instance.GetScaledNote(Random.Range(10, 20));
             int expression = Random.Range(0, 5);
             faceExpression.SetExpression(expression);
             faceExpression.SetNote(note);
@@ -37,20 +38,26 @@ public class AudioSynthTester : MonoBehaviour
             notes[0] = note;
             for (var i = 1; i < notes.Length; i++)
             {
-                notes[i] = Conductor.instance.GetScaledNote(note + Random.Range(1, 5));
+                notes[i] = note + Conductor.instance.GetScaledNote(Random.Range(2, 4));
             }
 
-            notes[0] = 10;
-            notes[1] = 10;
-            notes[2] = 10;
-            
-            _audioSynthPlayer.NoteOn(new NoteEvent(note));
+
+            _audioSynthPlayer.NoteOn(new NoteEvent(notes));
+            StartCoroutine(NoteOff());
         }
         else
         {
-            faceExpression.SetExpression(-1);
-            _isPlaying = false;
-            _audioSynthPlayer.NoteOff(Metronome.Instance.GetNextTime16());
+            //faceExpression.SetExpression(-1);
+            //_isPlaying = false;
+            //_audioSynthPlayer.NoteOff(Metronome.Instance.GetNextTime16());
         }
+    }
+
+    IEnumerator NoteOff()
+    {
+        yield return new WaitForSeconds(2f);
+        faceExpression.SetExpression(-1);
+        _isPlaying = false;
+        _audioSynthPlayer.NoteOff(Metronome.Instance.GetNextTime16());
     }
 }

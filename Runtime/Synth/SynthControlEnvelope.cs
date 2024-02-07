@@ -14,97 +14,94 @@ namespace UnitySynth.Runtime.Synth
             env_release
         };
 
-        private EnvState state;
-        private float output;
-        private float attackRate;
-        private float decayRate;
-        private float releaseRate;
-        private float attackCoef;
-        private float decayCoef;
-        private float releaseCoef;
-        private float sustainLevel;
-        private float targetRatioA;
-        private float targetRatioDR;
-        private float attackBase;
-        private float decayBase;
-        private float releaseBase;
+        private EnvState _state;
+        private float _output;
+        private float _attackRate;
+        private float _decayRate;
+        private float _releaseRate;
+        private float _attackCoef;
+        private float _decayCoef;
+        private float _releaseCoef;
+        private float _sustainLevel;
+        private float _targetRatioA;
+        private float _targetRatioDr;
+        private float _attackBase;
+        private float _decayBase;
+        private float _releaseBase;
 
-        //Range(0, 1)] public float attack;
-        //Range(0, 1)] public float decay;
-        //Range(0, 1)] public float sustain;
-        //Range(0, 10)] public float release;
+        
 
-        private int _sampleRate = 48000;
+        private int _sampleRate = 44100;
         public SynthSettingsObjectEnvelope settings;
 
         public override void NoteOn()
         {
             if (settings == null) return;
-            setAttackRate(settings.attack * _sampleRate);
-            setDecayRate(settings.decay * _sampleRate);
-            setSustainLevel(settings.sustain);
-            setReleaseRate(settings.release * _sampleRate);
-            setTargetRatioA(0.3f);
-            setTargetRatioDR(0.0001f);
-            state = EnvState.env_attack;
+            SetAttackRate(settings.attack * _sampleRate);
+            SetDecayRate(settings.decay * _sampleRate);
+            SetSustainLevel(settings.sustain);
+            SetReleaseRate(settings.release * _sampleRate);
+            SetTargetRatioA(0.3f);
+            SetTargetRatioDr(0.3f);
+            _state = EnvState.env_attack;
         }
 
         public override void NoteOff()
         {
-            state = EnvState.env_release;
+            _state = EnvState.env_release;
         }
 
-        private void setAttackRate(float rate)
+        private void SetAttackRate(float rate)
         {
-            attackRate = rate;
-            attackCoef = CalcCoef(rate, targetRatioA);
-            attackBase = (1.0f + targetRatioA) * (1.0f - attackCoef);
+            _attackRate = rate;
+            _attackCoef = CalcCoef(rate, _targetRatioA);
+            _attackBase = (1.0f + _targetRatioA) * (1.0f - _attackCoef);
         }
 
-        private void setDecayRate(float rate)
+        private void SetDecayRate(float rate)
         {
-            decayRate = rate;
-            decayCoef = CalcCoef(rate, targetRatioDR);
-            decayBase = (sustainLevel - targetRatioDR) * (1.0f - decayCoef);
+            _decayRate = rate;
+            _decayCoef = CalcCoef(rate, _targetRatioDr);
+            _decayBase = (_sustainLevel - _targetRatioDr) * (1.0f - _decayCoef);
         }
 
-        private void setReleaseRate(float rate)
+        private void SetReleaseRate(float rate)
         {
-            releaseRate = rate;
-            releaseCoef = CalcCoef(rate, targetRatioDR);
-            releaseBase = -targetRatioDR * (1.0f - releaseCoef);
+            _releaseRate = rate;
+            _releaseCoef = CalcCoef(rate, _targetRatioDr);
+            _releaseBase = -_targetRatioDr * (1.0f - _releaseCoef);
         }
 
-        private void setSustainLevel(float level)
+        private void SetSustainLevel(float level)
         {
-            sustainLevel = level;
-            decayBase = (sustainLevel - targetRatioDR) * (1.0f - decayCoef);
+            _sustainLevel = level;
+            _decayBase = (_sustainLevel - _targetRatioDr) * (1.0f - _decayCoef);
         }
 
-        private void setTargetRatioA(float targetRatio)
-        {
-            if (targetRatio < 0.000000001f)
-                targetRatio = 0.000000001f; // -180 dB
-            targetRatioA = targetRatio;
-            attackCoef = CalcCoef(attackRate, targetRatioA);
-            attackBase = (1.0f + targetRatioA) * (1.0f - attackCoef);
-        }
-
-        private void setTargetRatioDR(float targetRatio)
+        private void SetTargetRatioA(float targetRatio)
         {
             if (targetRatio < 0.000000001f)
                 targetRatio = 0.000000001f; // -180 dB
-            targetRatioDR = targetRatio;
-            decayCoef = CalcCoef(decayRate, targetRatioDR);
-            releaseCoef = CalcCoef(releaseRate, targetRatioDR);
-            decayBase = (sustainLevel - targetRatioDR) * (1.0f - decayCoef);
-            releaseBase = -targetRatioDR * (1.0f - releaseCoef);
+            _targetRatioA = targetRatio;
+            _attackCoef = CalcCoef(_attackRate, _targetRatioA);
+            _attackBase = (1.0f + _targetRatioA) * (1.0f - _attackCoef);
         }
 
-        public void reset()
+        private void SetTargetRatioDr(float targetRatio)
         {
-            state = EnvState.env_idle;
-            output = 0.0f;
+            if (targetRatio < 0.000000001f)
+                targetRatio = 0.000000001f; // -180 dB
+            _targetRatioDr = targetRatio;
+            _decayCoef = CalcCoef(_decayRate, _targetRatioDr);
+            _releaseCoef = CalcCoef(_releaseRate, _targetRatioDr);
+            _decayBase = (_sustainLevel - _targetRatioDr) * (1.0f - _decayCoef);
+            _releaseBase = -_targetRatioDr * (1.0f - _releaseCoef);
+        }
+
+        public void Reset()
+        {
+            _state = EnvState.env_idle;
+            _output = 0.0f;
         }
 
         private float CalcCoef(float rate, float targetRatio)
@@ -115,47 +112,47 @@ namespace UnitySynth.Runtime.Synth
 
         public override float Process(bool unipolar = false)
         {
-            switch (state)
+            switch (_state)
             {
                 case EnvState.env_idle:
                     break;
                 case EnvState.env_attack:
-                    output = attackBase + output * attackCoef;
-                    if (output >= 1.0f)
+                    _output = _attackBase + _output * _attackCoef;
+                    if (_output >= 1.0f)
                     {
-                        output = 1.0f;
-                        state = EnvState.env_decay;
+                        _output = 1.0f;
+                        _state = EnvState.env_decay;
                     }
 
                     break;
                 case EnvState.env_decay:
-                    output = decayBase + output * decayCoef;
-                    if (output <= sustainLevel)
+                    _output = _decayBase + _output * _decayCoef;
+                    if (_output <= _sustainLevel)
                     {
-                        output = sustainLevel;
-                        state = EnvState.env_sustain;
+                        _output = _sustainLevel;
+                        _state = EnvState.env_sustain;
                     }
 
                     break;
                 case EnvState.env_sustain:
                     break;
                 case EnvState.env_release:
-                    output = releaseBase + output * releaseCoef;
-                    if (output <= 0.0f)
+                    _output = _releaseBase + _output * _releaseCoef;
+                    if (_output <= 0.0f)
                     {
-                        output = 0.0f;
-                        state = EnvState.env_idle;
+                        _output = 0.0f;
+                        _state = EnvState.env_idle;
                     }
 
                     break;
             }
 
-            return output;
+            return _output;
         }
 
-        public void UpdateSettings(SynthSettingsObjectEnvelope settings)
+        public void UpdateSettings(SynthSettingsObjectEnvelope newSettings)
         {
-            this.settings = settings;
+            this.settings = newSettings;
         }
     }
 }

@@ -61,6 +61,7 @@ namespace UnitySynth.Runtime.Synth
             if (unipolar)
                 return Sin();
 
+
             return 1 + Sin();
         }
 

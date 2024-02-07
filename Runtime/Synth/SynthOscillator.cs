@@ -104,12 +104,13 @@ namespace UnitySynth.Runtime.Synth
         public void SetNote(int note)
         {
             _currentNote = note + settings.tuning;
-            set_freq(global::UnitySynth.Runtime.Synth.UnitySynth.FreqTab[_currentNote & 0x7f]);
+            set_freq(UnitySynth.FreqTab[_currentNote & 0x7f]);
         }
 
         public void SetPitchMod(float amount)
         {
             _pitchModAmount = Remap(amount, -1, 1, 0.5f, 2);
+            set_freq(UnitySynth.FreqTab[_currentNote & 0x7f]);
         }
 
         float Remap(float value, float from1, float to1, float from2, float to2)
@@ -122,15 +123,6 @@ namespace UnitySynth.Runtime.Synth
         {
             float freq__ppsmp = (freq__hz * _pitchModAmount) / sample_rate; // periods per sample
             _freqPhPSmp = (uint) (freq__ppsmp * PHASE_MAX);
-
-            // // sawDPW stuff
-            // dpwScale = 48000 / (4 * freq__hz * (1 - freq__hz / 48000));
-            // // recompute z^-1 to avoid horrible clicks when changing frequency
-            // float ph01 = (phase - freq__ph_p_smp) / PHASE_MAX;
-            // float bphase = 2.0f * ph01 - 1.0f;  // phasor in [-1;+1]       : saw
-            // float sq = bphase * bphase;         // squared saw             : parabola
-            // float dsq = sq - z1;                // differentiated parabola : bandlimited saw
-            // z1 = sq;                            // store next frame's z^-1
         }
 
         /// Basic oscillators

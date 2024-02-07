@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-1291635701572856408
+--- !u!114 &-6489787606731331110
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,15 +9,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8c5d75eb90954545a59552f9b363791, type: 3}
-  m_Name: Oscillator
+  m_Script: {fileID: 11500000, guid: 2696701b9eb054b50aac1114417c9ed0, type: 3}
+  m_Name: Filter LFO
   m_EditorClassIdentifier: 
-  tuning: -12
-  amplitude: 0.381
-  simpleOscillatorType: 0
-  noiseType: 1
-  waveTableOscillatorType: 1
-  oscillatorType: 1
+  amp: 0.045
+  frequency: 188.7
+  fadeInDuration: 2.78
+--- !u!114 &-1224362823350350345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
+  m_Name: Filter Envelope
+  m_EditorClassIdentifier: 
+  attack: 0.26
+  decay: 1.35
+  sustain: 0.35
+  release: 4.32
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32,20 +45,57 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInit: 1
   showOscillator: 1
+  unison: 0
+  voices: 3
+  voiceSpread: 0
   oscillatorSettings:
   - {fileID: 1680484185081292600}
   - {fileID: 7051489932187159931}
-  - {fileID: -1291635701572856408}
+  - {fileID: 969218229378813666}
   filterSettings:
-  - {fileID: 2603416687188450313}
-  pitchModifiers:
+  - {fileID: 5984399565727955207}
   - {fileID: 0}
+  pitchModifiers:
+  - {fileID: 4332135456809858053}
   amplitudeModifiers:
   - {fileID: 3943306911989720775}
-  - {fileID: 9140794649123728469}
+  - {fileID: 882244267403465855}
   filterModifiers:
-  - {fileID: 7258526525728203664}
-  - {fileID: 4299203792575825645}
+  - {fileID: -1224362823350350345}
+  - {fileID: -6489787606731331110}
+--- !u!114 &882244267403465855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2696701b9eb054b50aac1114417c9ed0, type: 3}
+  m_Name: Amplitude LFO
+  m_EditorClassIdentifier: 
+  amp: 0.409
+  frequency: 54
+  fadeInDuration: 1.4
+--- !u!114 &969218229378813666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c5d75eb90954545a59552f9b363791, type: 3}
+  m_Name: Oscillator
+  m_EditorClassIdentifier: 
+  tuning: -12
+  amplitude: 0.755
+  simpleOscillatorType: 0
+  noiseType: 0
+  waveTableOscillatorType: 2
+  oscillatorType: 1
 --- !u!114 &1680484185081292600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,33 +109,11 @@ MonoBehaviour:
   m_Name: Oscillator
   m_EditorClassIdentifier: 
   tuning: -12
-  amplitude: 0.113
+  amplitude: 0.931
   simpleOscillatorType: 1
   noiseType: 0
   waveTableOscillatorType: 0
   oscillatorType: 2
---- !u!114 &2603416687188450313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0060a0610eaf747e3971f417334fcfb7, type: 3}
-  m_Name: Filter
-  m_EditorClassIdentifier: 
-  filterType: 2
-  lowPassSettings:
-    oversampling: 3
-    cutoffFrequency: 5762
-    resonance: 0.905
-  bandPassSettings:
-    frequency: 810
-    bandWidth: 24.3
-  formantSettings:
-    vowel: 4
 --- !u!114 &3943306911989720775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,11 +126,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
   m_Name: Amplitude Envelope
   m_EditorClassIdentifier: 
-  attack: 0.3
-  decay: 0.33
-  sustain: 0.5
-  release: 2.07
---- !u!114 &4299203792575825645
+  attack: 0.54
+  decay: 0.23
+  sustain: 0.25
+  release: 3.59
+--- !u!114 &4332135456809858053
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -112,11 +140,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2696701b9eb054b50aac1114417c9ed0, type: 3}
-  m_Name: Filter LFO
+  m_Name: Pitch LFO
   m_EditorClassIdentifier: 
   amp: 1
-  frequency: 10
-  fadeInDuration: 0.01
+  frequency: 14.8
+  fadeInDuration: 3.57
+--- !u!114 &5984399565727955207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0060a0610eaf747e3971f417334fcfb7, type: 3}
+  m_Name: Filter
+  m_EditorClassIdentifier: 
+  filterType: 0
+  lowPassSettings:
+    oversampling: 4
+    cutoffFrequency: 7504
+    resonance: 0.62
+  bandPassSettings:
+    frequency: 1000
+    bandWidth: 10
+  formantSettings:
+    vowel: 1
 --- !u!114 &7051489932187159931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,40 +179,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c5d75eb90954545a59552f9b363791, type: 3}
   m_Name: Oscillator
   m_EditorClassIdentifier: 
-  tuning: -24
-  amplitude: 1
-  simpleOscillatorType: 1
+  tuning: 24
+  amplitude: 0.916
+  simpleOscillatorType: 2
   noiseType: 0
-  waveTableOscillatorType: 0
-  oscillatorType: 0
---- !u!114 &7258526525728203664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 174af51d63c184d1f96a4c2f77f33139, type: 3}
-  m_Name: Filter Envelope
-  m_EditorClassIdentifier: 
-  attack: 0.1
-  decay: 0.5
-  sustain: 0.5
-  release: 0.5
---- !u!114 &9140794649123728469
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2696701b9eb054b50aac1114417c9ed0, type: 3}
-  m_Name: Amplitude LFO
-  m_EditorClassIdentifier: 
-  amp: 0.333
-  frequency: 10
-  fadeInDuration: 1.48
+  waveTableOscillatorType: 1
+  oscillatorType: 1

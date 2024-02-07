@@ -24,7 +24,7 @@ namespace UnitySynth.Runtime.Synth
 
         public virtual float Process(bool unipolar = false)
         {
-            return 0;
+            return 1;
         }
     }
 }

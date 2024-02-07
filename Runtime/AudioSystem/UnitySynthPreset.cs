@@ -11,6 +11,12 @@ namespace UnitySynth.Runtime.AudioSystem
     {
         public bool isInit;
         public bool showOscillator;
+
+        public bool unison;
+        public int voices = 3;
+        public float voiceSpread;
+        
+        
         public SynthSettingsObjectOscillator[] oscillatorSettings;
         public SynthSettingsObjectFilter[] filterSettings;
         public SynthSettingsObjectBase[] pitchModifiers;

@@ -19,9 +19,6 @@
 //  SOFTWARE."
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Synth;
 using UnityEngine;
 using UnitySynth.Runtime.AudioSystem;
 using UnitySynth.Runtime.Synth.Filter;
@@ -31,10 +28,18 @@ namespace UnitySynth.Runtime.Synth
     [RequireComponent(typeof(AudioSource))]
     public class UnitySynth : MonoBehaviour
     {
-        private SynthOscillator[] _oscillators;
+        [Serializable]
+        struct SynthVoiceGroup
+        {
+            public SynthOscillator[] _oscillators;
+        }
+
+        private SynthVoiceGroup[] _voices;
 
 
-        public bool _unison;
+        //private SynthOscillator[] _oscillators;
+
+
         private SynthControlBase[] _voiceFrequencyModifiers;
 
         SynthControlBase[] amplitudeModifiers;
@@ -47,7 +52,6 @@ namespace UnitySynth.Runtime.Synth
         private bool _isInitialized = false;
 
         // Current MIDI evt
-        private List<int> _notes = new List<int>();
         private int _currentVelocity;
 
         private EventQueue _queue;
@@ -62,6 +66,7 @@ namespace UnitySynth.Runtime.Synth
         private bool _debugBufferEnabled = false;
 
         private EventQueue.QueuedEvent _nextEvent;
+        private NoteEvent _currentNoteEvent;
         private bool _eventIsWaiting = false;
         [SerializeField] private UnitySynthPreset _preset;
 
@@ -73,7 +78,7 @@ namespace UnitySynth.Runtime.Synth
             //queueLock = false;
             return result;
         }
-        
+
 
         public void ClearQueue()
         {
@@ -100,7 +105,9 @@ namespace UnitySynth.Runtime.Synth
                 Destroy(synthOscillator.gameObject);
             }
 
-            _oscillators = new SynthOscillator[_preset.oscillatorSettings.Length];
+
+            _voices = new SynthVoiceGroup[_preset.oscillatorSettings.Length];
+
             _voiceFrequencyModifiers = new SynthControlBase[_preset.pitchModifiers.Length];
             amplitudeModifiers = new SynthControlBase[_preset.amplitudeModifiers.Length];
             _filterModifiers = new SynthControlBase[_preset.filterModifiers.Length];
@@ -109,11 +116,19 @@ namespace UnitySynth.Runtime.Synth
             for (int i = 0; i < _preset.oscillatorSettings.Length; i++)
             {
                 var oscillatorSetting = _preset.oscillatorSettings[i];
-                var modGO = new GameObject("Oscillator");
-                modGO.transform.SetParent(transform);
-                var newOSC = modGO.AddComponent<SynthOscillator>();
-                newOSC.UpdateSettings(oscillatorSetting);
-                _oscillators[i] = newOSC;
+
+
+                var go = new GameObject("Oscillator " + oscillatorSetting.oscillatorType);
+                go.transform.SetParent(transform);
+                bool isNoise = oscillatorSetting.oscillatorType == SynthSettingsObjectOscillator.OscillatorType.Noise;
+                _voices[i]._oscillators = new SynthOscillator[isNoise ? 1 : _preset.voices];
+
+                for (int j = 0; j < _voices[i]._oscillators.Length; j++)
+                {
+                    var newOSC = go.AddComponent<SynthOscillator>();
+                    newOSC.UpdateSettings(oscillatorSetting);
+                    _voices[i]._oscillators[j] = newOSC;
+                }
             }
 
             for (int i = 0; i < _preset.filterSettings.Length; i++)
@@ -253,16 +268,36 @@ namespace UnitySynth.Runtime.Synth
         // This should only be called from OnAudioFilterRead
         private void HandleEventNow(EventQueue.QueuedEvent currentEvent)
         {
+            _currentNoteEvent = currentEvent.NoteEvent;
             if (currentEvent.NoteEvent._eventType == NoteEvent.EventTypes.NoteOn)
             {
-                foreach (var synthOscillator in _oscillators)
+                ResetVoices();
+                //UpdateParams();
+                
+                if (_preset.unison)
                 {
-                    synthOscillator.ResetPhase();
+                    //for (int i = 0; i < _oscillators.Length; i++)
+                    //{
+                    //    _oscillators[i].SetNote(_notes[0]);
+                    //    _oscillators[i].SetPitchMod(voiceFreq);
+                    //}
                 }
-
-
-                _notes = currentEvent.NoteEvent.notes.ToList();
-                UpdateParams();
+                else
+                {
+                    foreach (var voice in _voices)
+                    {
+                        for (int i = 0; i < voice._oscillators.Length; i++)
+                        {
+                            var osc = voice._oscillators[i];
+                            int currentNote = 0;
+                            if (i < _currentNoteEvent.notes.Length)
+                            {
+                                currentNote = (int)Mathf.Clamp(_currentNoteEvent.notes[i], 1, 60);
+                            }
+                            osc.SetNote(currentNote);
+                        }
+                    }
+                }
 
 
                 foreach (var ampModifier in amplitudeModifiers)
@@ -280,8 +315,9 @@ namespace UnitySynth.Runtime.Synth
                     frequencyModifier.NoteOn();
                 }
             }
-            else
+            else if(currentEvent.NoteEvent._eventType == NoteEvent.EventTypes.NoteOff)
             {
+     
                 foreach (var ampModifier in amplitudeModifiers)
                 {
                     ampModifier.NoteOff();
@@ -290,6 +326,11 @@ namespace UnitySynth.Runtime.Synth
                 foreach (var filterModifier in _filterModifiers)
                 {
                     filterModifier.NoteOff();
+                }
+                
+                foreach (var frequencyModifier in _voiceFrequencyModifiers)
+                {
+                    frequencyModifier.NoteOff();
                 }
             }
         }
@@ -325,6 +366,7 @@ namespace UnitySynth.Runtime.Synth
                 if (channels == 2)
                 {
                     int sampleFrames = data.Length / 2;
+
                     RenderFloat32StereoInterleaved(data, sampleFrames);
 
                     if (_debugBufferEnabled)
@@ -348,83 +390,32 @@ namespace UnitySynth.Runtime.Synth
                 for (int i = 0; i < 128; i++)
                 {
                     // 128 midi notes
-                    FreqTab[i] = midi2freq(i);
-                    _freqTabTest[i] = midi2freq(i);
+                    FreqTab[i] = Midi2Freq(i);
+                    _freqTabTest[i] = Midi2Freq(i);
                 }
             }
 
             _queue = new EventQueue(QueueCapacity);
-            _notes = new List<int> { 0 };
 
-            Reset();
+
+            ResetVoices();
         }
 
-        private void Reset()
+        private void ResetVoices()
         {
-            foreach (var synthOscillator in _oscillators)
+            foreach (var voice in _voices)
             {
-                synthOscillator.ResetPhase();
-            }
-        }
-
-
-        private void UpdateParams()
-        {
-            // Set synth params
-            foreach (var frequencyModifier in _voiceFrequencyModifiers)
-            {
-                frequencyModifier.DoUpdate();
-            }
-
-            foreach (var amplitudeModifier in amplitudeModifiers)
-            {
-                amplitudeModifier.DoUpdate();
-            }
-
-            foreach (var filterModifier in _filterModifiers)
-            {
-                filterModifier.DoUpdate();
-            }
-
-            float voiceFreq = 1;
-            foreach (var frequencyModifier in _voiceFrequencyModifiers)
-            {
-                voiceFreq *= frequencyModifier.Process();
-            }
-
-            if (_unison)
-            {
-                for (int i = 0; i < _oscillators.Length; i++)
+                foreach (var synthOscillator in voice._oscillators)
                 {
-                    _oscillators[i].SetNote(_notes[0]);
-                    _oscillators[i].SetPitchMod(voiceFreq);
+                    synthOscillator.ResetPhase();
                 }
             }
-            else
-            {
-                for (int i = 0; i < _oscillators.Length; i++)
-                {
-                    int currentNote = (int)Mathf.Repeat(i, _notes.Count);
-                    _oscillators[i].SetNote(_notes[currentNote]);
-                    _oscillators[i].SetPitchMod(voiceFreq);
-                }
-            }
-
-
-            //float cutOffFreq = _preset.filterSettings[0].lowPassSettings.cutoffFrequency;
-//
-            //foreach (var filterModifier in _filterModifiers)
-            //{
-            //    cutOffFreq *= filterModifier.Process();
-            //}
-
-            for (var i = 0; i < _filters.Length; i++)
-            {
-                var audioFilterBase = _filters[i];
-                audioFilterBase.SetParameters(_preset.filterSettings[i / 2]);
-                audioFilterBase.SetExpression(0);
-            }
         }
+
+
+        
+
+
 
         private void RenderFloat32StereoInterleaved(float[] buffer, int sampleFrames)
         {
@@ -433,7 +424,7 @@ namespace UnitySynth.Runtime.Synth
             int smp = 0;
             int bufferIndex = 0;
 
-            UpdateParams();
+            //UpdateParams();
 
             // Cache this for the entire buffer, we don't need to check for
             // every sample if new events have been enqueued.
@@ -505,26 +496,41 @@ namespace UnitySynth.Runtime.Synth
                     ampMod *= ampModifier.Process();
                 }
 
-                ampMod /= 2f;
+                //ampMod /= 2f;
+                
+                float voiceFreqMod = 1;
+                foreach (var frequencyModifier in _voiceFrequencyModifiers)
+                {
+                    voiceFreqMod *= frequencyModifier.Process();
+                }
+                
 
                 float oscillatorOutput = 0;
-                foreach (var synthOscillator in _oscillators)
+                int numOsc = 0;
+                foreach (var voice in _voices)
                 {
-                    oscillatorOutput += synthOscillator.Process();
+                    foreach (var synthOscillator in voice._oscillators)
+                    {
+                        synthOscillator.SetPitchMod(voiceFreqMod);
+                        oscillatorOutput += synthOscillator.Process();
+                        numOsc++;
+                    }
+
+                    oscillatorOutput /= numOsc;
                 }
 
-                oscillatorOutput /= _oscillators.Length;
-
-
                 float sample = oscillatorOutput * ampMod;
+                buffer[bufferIndex++] = sample;
+                buffer[bufferIndex++] = sample;
 
-                buffer[bufferIndex++] = sample;
-                buffer[bufferIndex++] = sample;
 
                 // Update oscillators
-                foreach (var synthOscillator in _oscillators)
+                foreach (var voice in _voices)
                 {
-                    synthOscillator.DoUpdate();
+                    foreach (var synthOscillator in voice._oscillators)
+                    {
+                        synthOscillator.DoUpdate();
+                    }
                 }
 
 
@@ -552,7 +558,7 @@ namespace UnitySynth.Runtime.Synth
 
 
         /// Internals
-        private static float midi2freq(int note)
+        private static float Midi2Freq(int note)
         {
             return 440 * (Mathf.Pow(2, ((note - 69) / 12f)));
             // return 32.70319566257483f * Mathf.Pow(2.0f, note / 12.0f + octave);
