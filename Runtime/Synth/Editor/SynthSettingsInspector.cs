@@ -1,6 +1,6 @@
-using Synth;
 using Synth.Editor;
 using UnityEditor;
+using UnityEditor.Graphs;
 using UnityEngine;
 using UnitySynth.Runtime.AudioSystem;
 using UnitySynth.Runtime.AudioSystem.Editor;
@@ -15,11 +15,25 @@ namespace UnitySynth.Runtime.Synth.Editor
         private bool _showAmpMods => EditorPrefs.GetBool("Amplitude Modifiers");
         private bool _showPitchMods => EditorPrefs.GetBool("Pitch Modifiers");
         private bool _showFilters => EditorPrefs.GetBool("Filters");
+        private bool _showOscilators => EditorPrefs.GetBool("Oscillators");
         private bool _showDevStuff => EditorPrefs.GetBool("Show Dev Stuff");
+        private GUIStyle _sectionHeaderStyle;
 
         public override void OnInspectorGUI()
         {
-            EditorPrefs.SetBool("Show Dev Stuff", EditorGUILayout.Foldout(_showDevStuff, "Dev stuff"));
+            _sectionHeaderStyle = new GUIStyle(EditorStyles.foldout)
+            {
+                fontStyle = FontStyle.Bold,
+                normal =
+                {
+                    textColor = Color.black
+                },
+            };
+            _sectionHeaderStyle.fontSize = 20;
+
+
+            EditorPrefs.SetBool("Show Dev Stuff",
+                EditorGUILayout.Foldout(_showDevStuff, "Dev stuff", EditorStyles.foldoutHeader));
             if (_showDevStuff)
             {
                 DrawDefaultInspector();
@@ -37,9 +51,10 @@ namespace UnitySynth.Runtime.Synth.Editor
                 return;
             }
 
-            GUILayout.Space(10);
-            _settingsObject.showOscillator = EditorGUILayout.Foldout(_settingsObject.showOscillator, "Oscillators");
-            if (_settingsObject.showOscillator)
+            DrawSectionHeader("Oscillators", _showOscilators);
+
+
+            if (_showOscilators)
             {
                 if (_settingsObject.oscillatorSettings.Length > 0)
                 {
@@ -58,8 +73,9 @@ namespace UnitySynth.Runtime.Synth.Editor
                 GUILayout.EndHorizontal();
             }
 
-            GUILayout.Space(10);
-            EditorPrefs.SetBool("Filters", EditorGUILayout.Foldout(_showFilters, "Filters"));
+
+            DrawSectionHeader("Filters", _showFilters);
+
             if (_showFilters)
             {
                 foreach (var osc in _settingsObject.filterSettings)
@@ -77,8 +93,8 @@ namespace UnitySynth.Runtime.Synth.Editor
             }
 
 
-            GUILayout.Space(10);
-            EditorPrefs.SetBool("Pitch Modifiers", EditorGUILayout.Foldout(_showPitchMods, "Pitch Modifiers"));
+            DrawSectionHeader("Pitch Modifiers", _showPitchMods);
+
             if (_showPitchMods)
             {
                 foreach (var ampMod in _settingsObject.pitchModifiers)
@@ -109,8 +125,8 @@ namespace UnitySynth.Runtime.Synth.Editor
             }
 
 
-            GUILayout.Space(10);
-            EditorPrefs.SetBool("Amplitude Modifiers", EditorGUILayout.Foldout(_showAmpMods, "Amplitude Modifiers"));
+            DrawSectionHeader("Amplitude Modifiers", _showAmpMods);
+
             if (_showAmpMods)
             {
                 foreach (var ampMod in _settingsObject.amplitudeModifiers)
@@ -140,11 +156,12 @@ namespace UnitySynth.Runtime.Synth.Editor
                 GUILayout.EndHorizontal();
             }
 
-            GUILayout.Space(10);
-            EditorPrefs.SetBool("Filter Modifiers", EditorGUILayout.Foldout(_showFilterMods, "Filter Modifiers"));
+
+            DrawSectionHeader("Filter Modifiers", _showFilterMods);
             if (_showFilterMods)
             {
                 EditorGUI.indentLevel = 1;
+                //EditorGUILayout.BeginVertical("box");
                 foreach (var filterMod in _settingsObject.filterModifiers)
                 {
                     switch (filterMod)
@@ -170,8 +187,27 @@ namespace UnitySynth.Runtime.Synth.Editor
                 }
 
                 GUILayout.EndHorizontal();
+                //GUILayout.EndVertical();
                 EditorGUI.indentLevel = 0;
+                GUILayout.Space(10);
             }
+        }
+
+        void DrawUILine(Color color, int thickness = 1, int padding = 20)
+        {
+            Rect rect = EditorGUILayout.GetControlRect(GUILayout.Height(padding + thickness));
+            rect.height = thickness;
+            rect.y += padding / 2f;
+            EditorGUI.DrawRect(rect, color);
+        }
+
+        void DrawSectionHeader(string sectionTitle, bool sectionBool)
+        {
+            DrawUILine(Color.black);
+            EditorPrefs.SetBool(sectionTitle,
+                EditorGUILayout.Foldout(sectionBool, sectionTitle, _sectionHeaderStyle));
+            if (sectionBool)
+                GUILayout.Space(10);
         }
 
         void CreateEnvelopeMod(string propertyName, string settingsName)
@@ -230,7 +266,6 @@ namespace UnitySynth.Runtime.Synth.Editor
             CreateOscillator("oscillatorSettings", "Oscillator");
             CreateFilter("filterSettings", "Filter");
             _settingsObject.isInit = true;
-            _settingsObject.showOscillator = true;
             EditorUtility.SetDirty(_settingsObject);
         }
 

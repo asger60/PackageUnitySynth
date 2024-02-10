@@ -25,7 +25,7 @@ using UnityEngine;
 namespace UnitySynth.Runtime.Synth.Editor
 {
     [CustomEditor(typeof(UnitySynth)), CanEditMultipleObjects]
-    public class MoogSynthInspector : UnityEditor.Editor
+    public class UnitySynthInspector : UnityEditor.Editor
     {
         private enum OscilloscopeMode
         {

@@ -9,6 +9,8 @@ namespace UnitySynth.Runtime.Synth.Editor
     {
         public static void Draw(SynthSettingsInspector parent, SynthSettingsObjectLFO settings, string listName)
         {
+            EditorGUILayout.BeginVertical("box");
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
@@ -36,7 +38,7 @@ namespace UnitySynth.Runtime.Synth.Editor
             settings.frequency = EditorGUILayout.Slider("Frequency", settings.frequency, 0.1f, 100);
             settings.fadeInDuration = EditorGUILayout.Slider("Fade In Duration", settings.fadeInDuration, 0.001f, 15);
 
-
+            GUILayout.EndVertical();
             GUILayout.Space(10);
         }
     }

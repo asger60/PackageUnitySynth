@@ -62,7 +62,7 @@ namespace UnitySynth.Runtime.Synth
         private float[] _freqTabTest;
 
         private const int QueueCapacity = 320;
-        private float[] _lastBuffer = new float[2048];
+        private readonly float[] _lastBuffer = new float[2048];
         private readonly object _bufferMutex = new object();
         private bool _debugBufferEnabled = false;
 

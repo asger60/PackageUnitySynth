@@ -12,7 +12,7 @@ namespace UnitySynth.Runtime.AudioSystem
         }
 
         public int[] notes;
-        public int data;
+        public float expression1;
         public double scheduledPlaytime;
         public EventTypes _eventType;
 
@@ -31,18 +31,10 @@ namespace UnitySynth.Runtime.AudioSystem
             this.notes = notes;
         }
 
-        public NoteEvent(int note, int data)
-        {
-            this.data = data;
-            scheduledPlaytime = Metronome.Instance.GetNextTime16();
-            _eventType = EventTypes.NoteOn;
-            notes = new int[1];
-            notes[0] = note;
-        }
+       
 
         public NoteEvent(int note, EventTypes noteState)
         {
-            this.data = data;
             scheduledPlaytime = Metronome.Instance.GetNextTime16();
             _eventType = noteState;
             notes = new int[1];

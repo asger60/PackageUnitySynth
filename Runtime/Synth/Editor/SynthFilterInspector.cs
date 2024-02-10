@@ -9,6 +9,8 @@ namespace UnitySynth.Runtime.Synth.Editor
     {
         public static void Draw(SynthSettingsInspector parent, SynthSettingsObjectFilter settings)
         {
+            EditorGUILayout.BeginVertical("box");
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
@@ -55,7 +57,7 @@ namespace UnitySynth.Runtime.Synth.Editor
                     throw new ArgumentOutOfRangeException();
             }
 
-
+GUILayout.EndVertical();
             GUILayout.Space(10);
         }
     }

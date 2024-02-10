@@ -10,7 +10,6 @@ namespace UnitySynth.Runtime.AudioSystem
     public class UnitySynthPreset : ScriptableObject
     {
         public bool isInit;
-        public bool showOscillator;
 
         public bool unison;
         public int voices = 3;

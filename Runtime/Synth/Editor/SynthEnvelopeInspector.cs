@@ -9,6 +9,8 @@ namespace Synth.Editor
     {
         public static void Draw(SynthSettingsInspector parent, SynthSettingsObjectEnvelope settings, string listName)
         {
+            EditorGUILayout.BeginVertical("box");
+
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
@@ -47,7 +49,7 @@ namespace Synth.Editor
             settings.sustain = EditorGUILayout.Slider("Sustain", settings.sustain, 0.001f, 1);
             settings.release = EditorGUILayout.Slider("Release", settings.release, 0.01f, 5);
 
-
+            GUILayout.EndVertical();
             GUILayout.Space(10);
         }
 

@@ -16,12 +16,13 @@ namespace UnitySynth.Runtime.Synth
         private UInt32 _freqPhPSmp = 0u;
         private float _pitchModAmount;
         private float _fineTune;
-        
+
 
         private int _currentNote;
 
 
         private readonly int _waveTableSize = 128;
+        private float[] _sine;
         private float[] _sine8Bit;
         private float[] _square8Bit;
         private float[] _saw8Bit;
@@ -30,12 +31,20 @@ namespace UnitySynth.Runtime.Synth
         public SynthSettingsObjectOscillator settings;
         private bool _isActive;
         public bool IsActive => _isActive;
+
         private void Start()
         {
             _isActive = true;
             switch (settings.oscillatorType)
             {
                 case SynthSettingsObjectOscillator.OscillatorType.Simple:
+                    _sine = new float[2048];
+                    
+                    for (int i = 0; i < 2048; ++i)
+                    {
+                        float angle01 = ((float)i) / 2048;
+                        _sine[i] = Mathf.Sin(angle01 * 2 * Mathf.PI) ;
+                    }
                     break;
                 case SynthSettingsObjectOscillator.OscillatorType.WaveTable:
                     _sine8Bit = new float[_waveTableSize];
@@ -89,7 +98,13 @@ namespace UnitySynth.Runtime.Synth
                     switch (settings.simpleOscillatorType)
                     {
                         case SynthSettingsObjectOscillator.SimpleOscillatorTypes.Sine:
-                            return sin() * settings.amplitude;
+                            return Sin() * settings.amplitude;
+                        //case SynthSettingsObjectOscillator.SimpleOscillatorTypes.SineTable:
+                        //    return SineTable();
+                        //case SynthSettingsObjectOscillator.SimpleOscillatorTypes.SineTaylor:
+                        //    return SineTaylor();
+                        //case SynthSettingsObjectOscillator.SimpleOscillatorTypes.SineChebyshev:
+                        //    return SineChebyshev();
                         case SynthSettingsObjectOscillator.SimpleOscillatorTypes.Saw:
                             return sawPolyBLEP() * settings.amplitude;
                         case SynthSettingsObjectOscillator.SimpleOscillatorTypes.Square:
@@ -130,7 +145,7 @@ namespace UnitySynth.Runtime.Synth
             _pitchModAmount = Remap(amount, -1, 1, 0.5f, 2);
             set_freq(UnitySynth.FreqTab[_currentNote & 0x7f]);
         }
-        
+
         public void SetFineTuning(float amount)
         {
             _fineTune = amount;
@@ -153,10 +168,70 @@ namespace UnitySynth.Runtime.Synth
         /// <returns></returns>
         // Library sine
         // - possibly slow
-        public float sin()
+        private float Sin()
         {
             float ph01 = _phase / PHASE_MAX;
             return Mathf.Sin(ph01 * 6.28318530717959f) * _amp;
+        }
+
+        float SineTable()
+        {
+            float ph01 = _phase / PHASE_MAX;
+            return _sine[(int)(ph01 * _sine.Length)];
+        }
+
+        float SineTaylor()
+        {
+            float ph01 = _phase / PHASE_MAX;
+
+            return (float)SinT(ph01 * 6.28318530717959f, 20) * _amp;
+        }
+
+        float SineChebyshev()
+        {
+            float ph01 = _phase / PHASE_MAX;
+            return (float)SinC(ph01 * 6.28318530717959f, 20) * _amp;
+        }
+
+        double SinT(double x, int numTerms)
+        {
+            double result = 0.0;
+            double term = x;
+
+            for (int n = 1; n <= numTerms; n++)
+            {
+                result += term;
+                term *= -x * x / ((2 * n) * (2 * n + 1));
+            }
+
+            return result;
+        }
+
+
+        public static double SinC(double x, int numTerms)
+        {
+            // Ensure x is in the range [-1, 1] for Chebyshev approximation
+            x = Math.Max(-1.0, Math.Min(1.0, x));
+
+            double result = 0.0;
+            for (int n = 0; n < numTerms; n++)
+            {
+                double term = ChebyshevPolynomial(n, x);
+                result += term;
+            }
+
+            return result;
+        }
+
+        // Chebyshev polynomial of the first kind
+        private static double ChebyshevPolynomial(int n, double x)
+        {
+            if (n == 0)
+                return 1.0;
+            else if (n == 1)
+                return x;
+            else
+                return 2.0 * x * ChebyshevPolynomial(n - 1, x) - ChebyshevPolynomial(n - 2, x);
         }
 
         // Differentiated Polynomial Waveform (DPW)

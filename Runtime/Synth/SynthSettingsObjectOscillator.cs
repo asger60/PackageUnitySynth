@@ -19,7 +19,7 @@ namespace UnitySynth.Runtime.Synth
         {
             Sine,
             Saw,
-            Square
+            Square,
         }
 
         public enum WaveTableOscillatorTypes

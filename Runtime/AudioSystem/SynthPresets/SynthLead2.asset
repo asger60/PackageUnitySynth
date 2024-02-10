@@ -30,9 +30,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInit: 1
   showOscillator: 1
+  unison: 0
+  voices: 3
+  voiceSpread: 0
   oscillatorSettings:
   - {fileID: 5318799767019729390}
-  - {fileID: 5445127553670670903}
   filterSettings:
   - {fileID: 7052544697985350902}
   pitchModifiers:
@@ -54,24 +56,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tuning: 0
   amplitude: 1
-  simpleOscillatorType: 0
-  noiseType: 0
-  waveTableOscillatorType: 0
-  oscillatorType: 0
---- !u!114 &5445127553670670903
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8c5d75eb90954545a59552f9b363791, type: 3}
-  m_Name: Oscillator
-  m_EditorClassIdentifier: 
-  tuning: 0
-  amplitude: 0
   simpleOscillatorType: 0
   noiseType: 0
   waveTableOscillatorType: 0
