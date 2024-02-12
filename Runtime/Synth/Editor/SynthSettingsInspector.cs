@@ -227,7 +227,7 @@ namespace UnitySynth.Runtime.Synth.Editor
         {
             SerializedProperty filterList = serializedObject.FindProperty(propertyName);
             var newEnvelope = _settingsObject.AddElement<SynthSettingsObjectLFO>(filterList, settingsName);
-            newEnvelope.amp = 1;
+            //newEnvelope.amp = 1;
             newEnvelope.frequency = 10;
             newEnvelope.fadeInDuration = 0.01f;
             serializedObject.ApplyModifiedProperties();

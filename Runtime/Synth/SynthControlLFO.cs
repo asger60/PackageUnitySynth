@@ -43,8 +43,8 @@ namespace UnitySynth.Runtime.Synth
         public override void DoUpdate()
         {
             if (!_isActive) return;
-            _currentAmp = Mathf.Lerp(0, settings.amp,
-                Mathf.InverseLerp(_fadeInStart, _fadeInEnd, (float)AudioSettings.dspTime));
+            _currentAmp = 
+                Mathf.InverseLerp(_fadeInStart, _fadeInEnd, (float)AudioSettings.dspTime);
             _phase += freq__ph_p_smp;
         }
 
@@ -67,7 +67,7 @@ namespace UnitySynth.Runtime.Synth
                 return Sin();
 
 
-            return 1 + Sin();
+            return 1 + Sin() * _currentAmp * (settings.sendAmount / 100f);
         }
 
         /// Basic oscillators
@@ -78,7 +78,7 @@ namespace UnitySynth.Runtime.Synth
         {
             if (_isActive == false) return 0.0f;
             float ph01 = _phase / PHASE_MAX;
-            return Mathf.Sin(ph01 * 6.28318530717959f) * _currentAmp;
+            return Mathf.Sin(ph01 * 6.28318530717959f);
         }
     }
 }

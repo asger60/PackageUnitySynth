@@ -27,14 +27,14 @@ namespace UnitySynth.Runtime.Synth.Editor
                 float t = i / (float)count;
                 float fadeIn = Mathf.InverseLerp(0, settings.fadeInDuration, t);
                 curve.AddKey(t,
-                    Mathf.Sin((t * 10) * settings.frequency) * settings.amp *
+                    Mathf.Sin((t * 10) * settings.frequency)  *
                     fadeIn);
             }
 
 
             EditorGUILayout.CurveField(curve, Color.red, new Rect(0, -1, 1, 2), GUILayout.Height(60));
 
-            settings.amp = EditorGUILayout.Slider("Amp", settings.amp, .01f, 1);
+            //settings.amp = EditorGUILayout.Slider("Amp", settings.amp, .01f, 1);
             settings.frequency = EditorGUILayout.Slider("Frequency", settings.frequency, 0.1f, 100);
             settings.fadeInDuration = EditorGUILayout.Slider("Fade In Duration", settings.fadeInDuration, 0.001f, 15);
 
