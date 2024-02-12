@@ -41,7 +41,7 @@ namespace UnitySynth.Runtime.Synth.Editor
                         EditorGUILayout.Slider("CutOff", settings.lowPassSettings.cutoffFrequency, 1, 24000);
                     settings.lowPassSettings.resonance =
                         EditorGUILayout.Slider("Resonance", settings.lowPassSettings.resonance, 0, 1);
-
+                    
                     break;
                 case SynthSettingsObjectFilter.FilterTypes.BandPass:
                     settings.bandPassSettings.frequency = EditorGUILayout.Slider("Frequency",
@@ -57,7 +57,7 @@ namespace UnitySynth.Runtime.Synth.Editor
                     throw new ArgumentOutOfRangeException();
             }
 
-GUILayout.EndVertical();
+            GUILayout.EndVertical();
             GUILayout.Space(10);
         }
     }

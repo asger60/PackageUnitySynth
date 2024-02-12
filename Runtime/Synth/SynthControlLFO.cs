@@ -21,6 +21,11 @@ namespace UnitySynth.Runtime.Synth
         {
             settings = settingsObject;
             _isActive = true;
+            _phase = 0u;
+            _currentAmp = 0;
+            _fadeInStart = (float)AudioSettings.dspTime;
+            _fadeInEnd = (float)AudioSettings.dspTime + settings.fadeInDuration;
+            SetFreq(settings.frequency);
         }
 
         private void Restart()
@@ -29,31 +34,31 @@ namespace UnitySynth.Runtime.Synth
             _phase = 0u;
             _isActive = true;
             _currentAmp = 0;
-            _fadeInStart = (float) AudioSettings.dspTime;
-            _fadeInEnd = (float) AudioSettings.dspTime + settings.fadeInDuration;
+            _fadeInStart = (float)AudioSettings.dspTime;
+            _fadeInEnd = (float)AudioSettings.dspTime + settings.fadeInDuration;
             SetFreq(settings.frequency);
         }
 
-   
 
         public override void DoUpdate()
         {
             if (!_isActive) return;
             _currentAmp = Mathf.Lerp(0, settings.amp,
-                Mathf.InverseLerp(_fadeInStart, _fadeInEnd, (float) AudioSettings.dspTime));
+                Mathf.InverseLerp(_fadeInStart, _fadeInEnd, (float)AudioSettings.dspTime));
             _phase += freq__ph_p_smp;
         }
 
 
         public override void NoteOn()
         {
-            Restart();
+            if (settings.retrigger)
+                Restart();
         }
 
         private void SetFreq(float freq__hz, int sample_rate = 48000)
         {
             float freq__ppsmp = freq__hz / sample_rate; // periods per sample
-            freq__ph_p_smp = (uint) (freq__ppsmp * PHASE_MAX);
+            freq__ph_p_smp = (uint)(freq__ppsmp * PHASE_MAX);
         }
 
         public override float Process(bool unipolar = false)

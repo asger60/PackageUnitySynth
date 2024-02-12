@@ -171,6 +171,7 @@ namespace UnitySynth.Runtime.Synth
         private float Sin()
         {
             float ph01 = _phase / PHASE_MAX;
+            //return (float)SinT(ph01 * 6.28318530717959f, 10) * _amp;
             return Mathf.Sin(ph01 * 6.28318530717959f) * _amp;
         }
 

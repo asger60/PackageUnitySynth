@@ -270,8 +270,6 @@ namespace UnitySynth.Runtime.Synth
             if (currentEvent.NoteEvent._eventType == NoteEvent.EventTypes.NoteOn)
             {
                 ResetVoices();
-                //UpdateParams();
-
                 if (_preset.unison)
                 {
                     foreach (var voice in _voices)

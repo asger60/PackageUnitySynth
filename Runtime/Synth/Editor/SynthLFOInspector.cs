@@ -38,6 +38,9 @@ namespace UnitySynth.Runtime.Synth.Editor
             settings.frequency = EditorGUILayout.Slider("Frequency", settings.frequency, 0.1f, 100);
             settings.fadeInDuration = EditorGUILayout.Slider("Fade In Duration", settings.fadeInDuration, 0.001f, 15);
 
+            settings.sendAmount = EditorGUILayout.Slider("Amount", settings.sendAmount, -100, 100);
+
+            settings.retrigger = EditorGUILayout.Toggle("Retrigger", settings.retrigger);
             GUILayout.EndVertical();
             GUILayout.Space(10);
         }

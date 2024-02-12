@@ -360,5 +360,9 @@ PrefabInstance:
       propertyPath: Bpm
       value: 45
       objectReference: {fileID: 0}
+    - target: {fileID: 2936520724387239406, guid: 0d08861fc1abc413eab1a48914fee23a, type: 3}
+      propertyPath: preset
+      value: 
+      objectReference: {fileID: 11400000, guid: fb512d22165a54ad4a24d8c23d522db7, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d08861fc1abc413eab1a48914fee23a, type: 3}
