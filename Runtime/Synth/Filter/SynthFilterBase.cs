@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UnitySynth.Runtime.Synth.Filter
 {
-    public abstract class AudioFilterBase : MonoBehaviour
+    public abstract class SynthFilterBase : MonoBehaviour
     {
         public SynthSettingsObjectFilter settings;
         public abstract void SetExpression(float data);

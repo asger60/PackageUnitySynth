@@ -7,6 +7,7 @@ namespace UnitySynth.Runtime.Synth
         public float decay;
         public float sustain;
         public float release;
-    
+        public float sendAmount = 100;
+
     }
 }

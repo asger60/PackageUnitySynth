@@ -15,6 +15,7 @@ namespace UnitySynth.Runtime.Synth.Editor
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
                 parent.DeleteElement<SynthSettingsObjectFilter>(settings, "filterSettings");
+                parent.RebuildSynth();
             }
 
             GUILayout.EndHorizontal();

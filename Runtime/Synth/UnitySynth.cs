@@ -48,7 +48,7 @@ namespace UnitySynth.Runtime.Synth
         private SynthControlBase[] _filterModifiers;
 
 
-        private AudioFilterBase[] _filters;
+        private SynthFilterBase[] _filters;
 
         private bool _isInitialized = false;
 
@@ -105,13 +105,18 @@ namespace UnitySynth.Runtime.Synth
             {
                 Destroy(synthOscillator.gameObject);
             }
+            
+            foreach (var synthFilterBase in GetComponentsInChildren<SynthFilterBase>())
+            {
+                Destroy(synthFilterBase.gameObject);
+            }
 
 
             _voices = new SynthVoiceGroup[_preset.oscillatorSettings.Length];
             _voiceFrequencyModifiers = new SynthControlBase[_preset.pitchModifiers.Length];
             amplitudeModifiers = new SynthControlBase[_preset.amplitudeModifiers.Length];
             _filterModifiers = new SynthControlBase[_preset.filterModifiers.Length];
-            _filters = new AudioFilterBase[_preset.filterSettings.Length];
+            _filters = new SynthFilterBase[_preset.filterSettings.Length];
 
             for (int i = 0; i < _preset.oscillatorSettings.Length; i++)
             {
@@ -139,7 +144,7 @@ namespace UnitySynth.Runtime.Synth
 
                         var modGO = new GameObject("LowPassFilter");
                         modGO.transform.SetParent(transform);
-                        var newFilter = modGO.AddComponent<AudioFilterLowPass>();
+                        var newFilter = modGO.AddComponent<SynthFilterLowPass>();
                         newFilter.SetSettings(_preset.filterSettings[i]);
                         _filters[i] = newFilter;
 
@@ -152,7 +157,7 @@ namespace UnitySynth.Runtime.Synth
 
                         var phFilterGO = new GameObject("BandPassFilter");
                         phFilterGO.transform.SetParent(transform);
-                        var newHPFilter = phFilterGO.AddComponent<AudioFilterBandPass>();
+                        var newHPFilter = phFilterGO.AddComponent<SynthFilterBandPass>();
                         newHPFilter.SetSettings(_preset.filterSettings[i]);
                         _filters[i] = newHPFilter;
 
@@ -166,7 +171,7 @@ namespace UnitySynth.Runtime.Synth
 
                         var formantFilterGO = new GameObject("FormantFilter");
                         formantFilterGO.transform.SetParent(transform);
-                        var newFormantFilter = formantFilterGO.AddComponent<AudioFilterFormant>();
+                        var newFormantFilter = formantFilterGO.AddComponent<SynthFilterFormant>();
                         newFormantFilter.SetSettings(_preset.filterSettings[i]);
                         _filters[i] = newFormantFilter;
 

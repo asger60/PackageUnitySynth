@@ -14,21 +14,33 @@ namespace UnitySynth.Runtime.Synth.Editor
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
                 parent.DeleteElement<SynthSettingsObjectOscillator>(settings, "oscillatorSettings");
+                parent.RebuildSynth();
             }
 
             EditorGUILayout.PrefixLabel("Voice", new GUIStyle { fontStyle = FontStyle.Bold });
             GUILayout.EndHorizontal();
 
-            //AnimationCurve curve = new AnimationCurve();
-            //EditorGUILayout.CurveField(curve, Color.red, new Rect(0, -1, 1, 2), GUILayout.Height(60));
 
             var types = Enum.GetNames(typeof(SynthSettingsObjectOscillator.OscillatorType));
 
+
+            EditorGUI.BeginChangeCheck();
+            
             GUILayout.Space(10);
+            
             settings.oscillatorType =
                 (SynthSettingsObjectOscillator.OscillatorType)GUILayout.SelectionGrid((int)settings.oscillatorType,
                     types, 3);
+            
             GUILayout.Space(5);
+            
+            if (EditorGUI.EndChangeCheck())
+            {
+                if (Application.isPlaying)
+                {
+                    parent.RebuildSynth();
+                }
+            }
 
             settings.amplitude = EditorGUILayout.Slider("Volume", settings.amplitude, 0f, 1f);
 
@@ -54,6 +66,7 @@ namespace UnitySynth.Runtime.Synth.Editor
                             "Noise type", settings.noiseType);
                     break;
             }
+
 
             GUILayout.EndVertical();
 

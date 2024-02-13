@@ -3,9 +3,9 @@ using UnitySynth.Runtime.Synth.Filter;
 
 namespace UnitySynth.Runtime.Synth
 {
-    public class AudioFilterBandPass : AudioFilterBase
+    public class SynthFilterBandPass : SynthFilterBase
     {
-        public AudioFilterBandPass(float sampleRate)
+        public SynthFilterBandPass(float sampleRate)
         {
             //_sampleRate = sampleRate;
             _q = 5;

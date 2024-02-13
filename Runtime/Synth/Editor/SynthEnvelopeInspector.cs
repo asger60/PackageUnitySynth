@@ -15,6 +15,7 @@ namespace Synth.Editor
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
                 parent.DeleteElement<SynthSettingsObjectEnvelope>(settings, listName);
+                parent.RebuildSynth();
             }
 
             EditorGUILayout.PrefixLabel("Envelope", new GUIStyle { fontStyle = FontStyle.Bold });
@@ -48,6 +49,8 @@ namespace Synth.Editor
             settings.decay = EditorGUILayout.Slider("Decay", settings.decay, 0.01f, 5);
             settings.sustain = EditorGUILayout.Slider("Sustain", settings.sustain, 0.001f, 1);
             settings.release = EditorGUILayout.Slider("Release", settings.release, 0.01f, 5);
+
+            settings.sendAmount = EditorGUILayout.Slider("Send Amount", settings.sendAmount, -100f, 100f);
 
             GUILayout.EndVertical();
             GUILayout.Space(10);

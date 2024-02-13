@@ -15,6 +15,7 @@ namespace UnitySynth.Runtime.Synth.Editor
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
                 parent.DeleteElement<SynthSettingsObjectLFO>(settings, listName);
+                parent.RebuildSynth();
             }
 
             EditorGUILayout.PrefixLabel("LFO", new GUIStyle { fontStyle = FontStyle.Bold });

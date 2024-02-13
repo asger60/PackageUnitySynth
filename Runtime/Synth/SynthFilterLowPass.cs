@@ -93,7 +93,7 @@ using static System.Math;
 
 namespace UnitySynth.Runtime.Synth
 {
-    public class AudioFilterLowPass : AudioFilterBase
+    public class SynthFilterLowPass : SynthFilterBase
     {
         /// Static config
         const float C = 1.0f; // ????
@@ -115,7 +115,7 @@ namespace UnitySynth.Runtime.Synth
 
         float cutoff;
 
-        public AudioFilterLowPass(float sampleRate)
+        public SynthFilterLowPass(float sampleRate)
         {
             Fs = sampleRate;
             v = V_t * 0.5f; // 1/2V_t

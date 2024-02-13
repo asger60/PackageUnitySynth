@@ -147,7 +147,7 @@ namespace UnitySynth.Runtime.Synth
                     break;
             }
 
-            return _output;
+            return _output * (settings.sendAmount / 100f);
         }
 
         public void UpdateSettings(SynthSettingsObjectEnvelope newSettings)
